@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nice_loading_button/nice_loading_button.dart';
 
+import '../routes/route_helper.dart';
 import '../theme/color_constants.dart';
 import '../widgets/edit_text_widget.dart';
 
@@ -149,6 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Do something here
                             await Future.delayed(const Duration(seconds: 5));
                             stopLoading();
+                            Get.offNamed(RouteHelper.getDashboardScreen());
                           }
                         },
                       ),

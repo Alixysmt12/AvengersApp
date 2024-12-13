@@ -20,7 +20,7 @@ class LightTheme {
     textTheme: TextTheme(
       displayLarge: GoogleFonts.cabin(
         color: ColorConstants.accentColor,
-        fontSize: 32,
+        fontSize: 27,
         fontWeight: FontWeight.bold,
       ),
       bodyLarge: GoogleFonts.cabin(
@@ -28,8 +28,8 @@ class LightTheme {
         fontSize: 16,
       ),
       bodyMedium: GoogleFonts.cabin(
-        color: ColorConstants.textSecondary,
-        fontSize: 14,
+        color: ColorConstants.textLight,
+        fontSize: 17,
       ),
       headlineSmall: GoogleFonts.cabin(
         color: ColorConstants.textPrimary,

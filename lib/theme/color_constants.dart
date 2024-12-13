@@ -6,6 +6,19 @@ class ColorConstants {
   static const Color primaryDarkColor = Color(0xFF274293);
   static const Color accentColor = Color(0xFF4566C9); // Teal
 
+  //Custom
+  static const Color dashboardColor = Color(0xFFCBD3FF);
+  static const Color dashboardColor2 = Color(0xFFC777F2);
+  static const Color dashboardColor3 = Color(0xFF9561FF);
+  static const Color dashboardColor4 = Color(0xFF7EC6F1);
+  static const Color dashboardColor5 = Color(0xFF5CA9FF);
+  static const Color dashboardColor6 = Color(0xFFFFBF78);
+  static const Color dashboardColor7 = Color(0xFFF1A45E);
+  static const Color dashboardColor8 = Color(0xFFEB638B);
+  static const Color dashboardColor9 = Color(0xFFEA5D7F);
+  static const Color dashboardColor10 = Color(0xFF67E6CB);
+  static const Color dashboardColor11= Color(0xFF69E2BF);
+
   // Background colors
   static const Color backgroundLight = Color(0xFFF1F1F1);
   static const Color backgroundDark = Color(0xFF121212);
