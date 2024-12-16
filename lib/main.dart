@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeController.theme, // Uses the GetX theme controller
-      initialRoute: RouteHelper.getDashboardScreen(),
+      initialRoute: RouteHelper.getLoginScreen(),
       getPages: RouteHelper.routes,
     ));
   }

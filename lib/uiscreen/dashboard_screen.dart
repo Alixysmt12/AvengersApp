@@ -290,6 +290,100 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: ColorConstants.textPrimary,
                           ),
                         ),
+                        SizedBox(height: 10,),
+
+                        Row(
+                          children: [
+                            CircularProgressBarWithLabel(),
+                            SizedBox(width: 15,),
+                            CircularProgressBarWithLabel2(),
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          'Average Ticket Closure Time',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: ColorConstants.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Row(
+                          children: [
+                            // First container (larger)
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: ColorConstants.primaryColor,
+                                  borderRadius: BorderRadius.circular(19),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(11.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/icon4.png',
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'Pending at Support',
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        '00',
+                                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                          color: ColorConstants.textLight,
+                                          fontSize: 40,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 15),
+                            // Second container (smaller)
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: ColorConstants.primaryColor,
+                                  borderRadius: BorderRadius.circular(19),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(11.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/icon11.png',
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'Pending at Support',
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        '00',
+                                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                          color: ColorConstants.textLight,
+                                          fontSize: 40,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
 
                       ],
                     ),
@@ -304,6 +398,196 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
 }
+
+class CircularProgressBarWithLabel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'MTD',  // Label
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold
+              )
+          ),
+          CustomPaint(
+            size: Size(140, 100),  // Adjust the size of the progress bar
+            painter: CircularProgressBarPainter(progress: 0.72), // 72% progress
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CircularProgressBarPainter extends CustomPainter {
+  final double progress; // Progress value (0.0 to 1.0)
+  CircularProgressBarPainter({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Paint for the background circle (gray)
+    Paint backgroundPaint = Paint()
+      ..color = Colors.grey.withOpacity(0.2) // Gray background
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 20; // Increased stroke width
+
+    // Paint for the progress arc (with gradient)
+    Paint progressPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 20; // Increased stroke width
+    progressPaint.shader = SweepGradient(
+      startAngle: 3.14,  // Starting angle
+      endAngle: 3.14 + 3.14 * progress,  // Adjust the sweep based on progress
+      colors: [ColorConstants.dashboardColor2, ColorConstants.dashboardColor3],  // Gradient colors
+    ).createShader(Rect.fromCircle(center: Offset(size.width / 2, size.height), radius: size.width / 2));
+
+    // Draw the background arc (half circle)
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(size.width / 2, size.height), radius: size.width / 2),
+      3.14,  // Starting angle (left side of half circle)
+      3.14,  // Sweep angle (half circle)
+      false,  // Do not use the center of the circle
+      backgroundPaint,
+    );
+
+    // Draw the progress arc (half circle with gradient)
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(size.width / 2, size.height), radius: size.width / 2),
+      3.14,  // Starting angle
+      3.14 * progress,  // Sweep angle based on progress
+      false,  // Do not use the center of the circle
+      progressPaint,
+    );
+
+    // Draw the percentage text at the bottom center
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: '${(progress * 100).toInt()}%',  // Display percentage
+        style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    // Adjust text position to the bottom center
+    textPainter.paint(
+      canvas,
+      Offset((size.width - textPainter.width) / 2, size.height - textPainter.height - 10), // Bottom-center position
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class CircularProgressBarWithLabel2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+              'YTD',  // Label
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold
+              )
+          ),
+          CustomPaint(
+            size: Size(140, 100),  // Adjust the size of the progress bar
+            painter: CircularProgressBarPainter(progress: 0.22), // 72% progress
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CircularProgressBarPainter2 extends CustomPainter {
+  final double progress; // Progress value (0.0 to 1.0)
+  CircularProgressBarPainter2({required this.progress});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Paint for the background circle (gray)
+    Paint backgroundPaint = Paint()
+      ..color = Colors.grey.withOpacity(0.2) // Gray background
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 20; // Increased stroke width
+
+    // Paint for the progress arc (with gradient)
+    Paint progressPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 20; // Increased stroke width
+    progressPaint.shader = SweepGradient(
+      startAngle: 3.14,  // Starting angle
+      endAngle: 3.14 + 3.14 * progress,  // Adjust the sweep based on progress
+      colors: [ColorConstants.dashboardColor8, ColorConstants.dashboardColor9],  // Gradient colors
+    ).createShader(Rect.fromCircle(center: Offset(size.width / 2, size.height), radius: size.width / 2));
+
+    // Draw the background arc (half circle)
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(size.width / 2, size.height), radius: size.width / 2),
+      3.14,  // Starting angle (left side of half circle)
+      3.14,  // Sweep angle (half circle)
+      false,  // Do not use the center of the circle
+      backgroundPaint,
+    );
+
+    // Draw the progress arc (half circle with gradient)
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(size.width / 2, size.height), radius: size.width / 2),
+      3.14,  // Starting angle
+      3.14 * progress,  // Sweep angle based on progress
+      false,  // Do not use the center of the circle
+      progressPaint,
+    );
+
+    // Draw the percentage text at the bottom center
+    TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: '${(progress * 100).toInt()}%',  // Display percentage
+        style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    // Adjust text position to the bottom center
+    textPainter.paint(
+      canvas,
+      Offset((size.width - textPainter.width) / 2, size.height - textPainter.height - 10), // Bottom-center position
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+
 
 /*
 CustomStatusRow(
