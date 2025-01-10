@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nice_loading_button/nice_loading_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../network/controller.dart';
 import '../routes/route_helper.dart';
 import '../theme/color_constants.dart';
+import '../utils/app_constants.dart';
 import '../widgets/edit_text_widget.dart';
+import '../widgets/show_custom_snackbar.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -130,56 +134,84 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 50),
 
                     Center(
-                      child: LoadingButton(
-                        height: 50,
-                        borderRadius: 8,
-                        animate: true,
-                        color: ColorConstants.accentColor,
-                        width: MediaQuery.of(context).size.width,
-                        loader: Container(
-                          padding: const EdgeInsets.all(10),
-                          width: 40,
-                          height: 40,
-                          child: const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width, // Full width of the screen
+                        height: 50, // Height of the button
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8), // Same border radius as button
+                          gradient: LinearGradient(
+                            colors: [ColorConstants.primaryColor, ColorConstants.accentColor], // Example gradient colors
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
                         ),
-                        child: const Text("Login",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,),),
-                        onTap: (startLoading, stopLoading, buttonState) async {
-                          if (buttonState == ButtonState.idle) {
-                            startLoading();
-                            // Do something here
-                            await Future.delayed(const Duration(seconds: 5));
-                            stopLoading();
-                            Get.offNamed(RouteHelper.getDashboardScreen());
-                          }
-                        },
-                      ),
-                    ),
+                        child: LoadingButton(
+                          height: 50,
+                          borderRadius: 8,
+                          animate: true,
+                          color: Colors.transparent, // Make button color transparent
+                          width: MediaQuery.of(context).size.width,
+                          loader: Container(
+                            padding: const EdgeInsets.all(10),
+                            width: 40,
+                            height: 40,
+                            child: const CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onTap: (startLoading, stopLoading, buttonState) async {
 
-                    // Login Button
-                /*    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle login action
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF274293),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
+                            if (_emailController.text.isEmpty ||
+                                _passwordController.text.isEmpty) {
+                              showCustomSnackBar(
+                                  "User Id and password cannot be empty.");
+
+                            }else {
+
+                              if (buttonState == ButtonState.idle) {
+                                startLoading();
+
+                              }
+                              var authController = Get.find<LoginController>();
+                              authController
+                                  .login(
+                                _emailController.text,
+                                _passwordController.text,
+                              )
+                                  .then((response) async {
+                                if (response.status == true) {
+
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                                  AppConstants.SIGNUP_TOKEN = response.data!.userId!;
+
+                                  prefs.remove("user_id");
+                                  prefs.setString("user_id", response.data!.userId!);
+                                  // Simulate a delay or API call
+
+                                  Get.offNamed(RouteHelper.getDashboardScreen());
+
+                                } else {
+                                  stopLoading();
+                                  showCustomSnackBar(response.message.toString(),
+                                      title: "Error");
+                                }
+                              });
+
+
+                            }
+
+                          },
                         ),
                       ),
-                    ),*/
+                    )
                   ],
                 ),
               ),

@@ -1,0 +1,16 @@
+{
+  "status": true,
+  "message": "Project wise open tickets",
+  "data": [
+    {
+      "project_id": "1",
+      "name": "ALTIN ORAN ECZANESİ",
+      "count": "12"
+    },
+    {
+      "project_id": "2",
+      "name": "ALTINTAŞ ECZANESİ",
+      "count": "12"
+    }
+  ]
+}

@@ -1,13 +1,14 @@
 import 'package:avengers_app/routes/route_helper.dart';
 import 'package:avengers_app/theme/app_theme.dart';
 import 'package:avengers_app/theme/theme_controller.dart';
-import 'package:avengers_app/utils/color_theme.dart';
-import 'package:avengers_app/utils/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dependencies/dependencies.dart' as dep;
 
-void main() {
+Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  await dep.init();
   runApp(MyApp());
 }
 

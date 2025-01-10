@@ -1,6 +1,10 @@
 import 'package:avengers_app/theme/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:get/get.dart';
 
+import '../routes/route_helper.dart';
 import '../widgets/tickets_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -11,11 +15,45 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
+  final _key = GlobalKey<ExpandableFabState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
+        floatingActionButton: SpeedDial(
+          icon: Icons.add,
+          backgroundColor: ColorConstants.primaryColor, // Custom primary color
+          activeIcon: Icons.close,
+          spacing: 10,
+          spaceBetweenChildren: 10,
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.support_agent, color: Colors.white),
+              backgroundColor: ColorConstants.primaryColor,
+              label: 'Add Quick Support Ticket',
+              labelStyle: TextStyle(fontSize: 16.0),
+              onTap: () {
+                // Handle 'Add Quick Support Ticket' tap
+                Get.offNamed(RouteHelper.getAddSupportTicketsScreen());
+                // Navigate or perform desired action
+              },
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.note_add, color: Colors.white),
+              backgroundColor: ColorConstants.primaryColor,
+              label: 'Add Support Ticket',
+              labelStyle: TextStyle(fontSize: 16.0),
+              onTap: () {
+                // Handle 'Add Support Ticket' tap
+                Get.offNamed(RouteHelper.getSupportTicketsFormScreen());
+                // Navigate or perform desired action
+              },
+            ),
+          ],
+        ),
         body: SafeArea(
           child: CustomScrollView(
             slivers: [
@@ -98,6 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Expanded(
                               flex: 3,
                               child: Container(
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: ColorConstants.primaryColor,
                                   borderRadius: BorderRadius.circular(19),
@@ -135,6 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Expanded(
                               flex: 2,
                               child: Container(
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: ColorConstants.dashboardColor,
                                   borderRadius: BorderRadius.circular(19),
@@ -178,6 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Expanded(
                               flex: 2,
                               child: Container(
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: ColorConstants.dashboardColor,
                                   borderRadius: BorderRadius.circular(19),
@@ -217,6 +258,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Expanded(
                               flex: 3,
                               child: Container(
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: ColorConstants.primaryColor,
                                   borderRadius: BorderRadius.circular(19),
@@ -313,6 +355,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Expanded(
                               flex: 3,
                               child: Container(
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: ColorConstants.primaryColor,
                                   borderRadius: BorderRadius.circular(19),
@@ -350,6 +393,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Expanded(
                               flex: 3,
                               child: Container(
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: ColorConstants.primaryColor,
                                   borderRadius: BorderRadius.circular(19),

@@ -18,6 +18,7 @@ class ColorConstants {
   static const Color dashboardColor9 = Color(0xFFEA5D7F);
   static const Color dashboardColor10 = Color(0xFF67E6CB);
   static const Color dashboardColor11= Color(0xFF69E2BF);
+  static const Color dashboardColor12= Color(0xFFC2CBFC);
 
   // Background colors
   static const Color backgroundLight = Color(0xFFF1F1F1);
