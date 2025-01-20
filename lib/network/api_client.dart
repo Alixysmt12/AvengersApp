@@ -33,12 +33,25 @@ class ApiClient extends GetConnect implements GetxService {
   }
 
   ///Dashboard
-  Future<Response> dashboard(String url) async {
-
+  Future<Response> dashboard(dynamic body) async {
     try {
-      // URL-encoded body requires 'FormData'
-      // final formData = FormData(queryParams);
-      Response response = await get(url, headers: _mainHeader);
+      print("Response body: $body");
+      Response response = await post("",body, headers: _mainHeader);
+
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      return response;
+    } catch (e) {
+      print('Error during login: $e');
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
+  ///Listing
+  Future<Response> getListing(dynamic body) async {
+    try {
+      print("Response body: $body");
+      Response response = await post("",body, headers: _mainHeader);
 
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.body}");

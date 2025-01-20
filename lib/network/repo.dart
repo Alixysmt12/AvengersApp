@@ -25,7 +25,24 @@ class DashboardRep {
 
   DashboardRep({required this.apiClient});
 
-  Future<Response> dashboard() async {
-    return await apiClient.dashboard(AppConstants.DASHBOARD_URL);
+  Future<Response> dashboard(String action, String sid) async {
+    return await apiClient.dashboard({
+      "action": action,
+      "sid": sid,
+    });
+  }
+}
+
+class ProjectWiseListingRepo {
+  late final ApiClient apiClient;
+
+  ProjectWiseListingRepo({required this.apiClient});
+
+  Future<Response> getListing(String action, String sid,String quickSupport) async {
+    return await apiClient.dashboard({
+      "action": action,
+      "type": quickSupport,
+      "sid": sid,
+    });
   }
 }

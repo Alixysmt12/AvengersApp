@@ -13,4 +13,5 @@ class AppConstants {
   ///Ends Points URL Actions
   static const String LOGIN_URL = "login";
   static const String DASHBOARD_URL = "dashboard";
+  static const String LISTING = "listing";
 }

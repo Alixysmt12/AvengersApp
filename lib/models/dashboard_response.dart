@@ -1,73 +1,81 @@
 class DashboardModel {
   bool? status;
   String? message;
-  DataDashboard? dataDashboard;
+  DashboardData? data;
 
-  DashboardModel({this.status, this.message, this.dataDashboard});
+  DashboardModel({this.status, this.message, this.data});
 
   DashboardModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    dataDashboard = json['dataDashboard'] != null
-        ? new DataDashboard.fromJson(json['dataDashboard'])
-        : null;
+    data = json['data'] != null ? new DashboardData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.dataDashboard != null) {
-      data['dataDashboard'] = this.dataDashboard!.toJson();
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
-class DataDashboard {
-  String? fullName;
+class DashboardData {
+  String? fullname;
   Counters? counters;
-  TicketHighlight? ticketHighlight;
-  TicketClosureRatio? ticketClosureRatio;
-  AvgTicketClosureTime? avgTicketClosureTime;
+  TicketHighlights? ticketHighlights;
+  TicketClosureRatioUHF? ticketClosureRatioUHF;
+  TicketClosureRatioUHF? ticketClosureRatio;
+  AverageTicketClosureTime? averageTicketClosureTime;
 
-  DataDashboard(
-      {this.fullName,
+  DashboardData(
+      {this.fullname,
         this.counters,
-        this.ticketHighlight,
+        this.ticketHighlights,
+        this.ticketClosureRatioUHF,
         this.ticketClosureRatio,
-        this.avgTicketClosureTime});
+        this.averageTicketClosureTime});
 
-  DataDashboard.fromJson(Map<String, dynamic> json) {
-    fullName = json['full_name'];
-    counters = json['Counters'] != null
-        ? new Counters.fromJson(json['Counters'])
+  DashboardData.fromJson(Map<String, dynamic> json) {
+    fullname = json['fullname'];
+    counters = json['counters'] != null
+        ? new Counters.fromJson(json['counters'])
         : null;
-    ticketHighlight = json['ticket_highlight'] != null
-        ? new TicketHighlight.fromJson(json['ticket_highlight'])
+    ticketHighlights = json['ticket_highlights'] != null
+        ? new TicketHighlights.fromJson(json['ticket_highlights'])
+        : null;
+    ticketClosureRatioUHF = json['ticket_closure_ratio_UHF'] != null
+        ? new TicketClosureRatioUHF.fromJson(json['ticket_closure_ratio_UHF'])
         : null;
     ticketClosureRatio = json['ticket_closure_ratio'] != null
-        ? new TicketClosureRatio.fromJson(json['ticket_closure_ratio'])
+        ? new TicketClosureRatioUHF.fromJson(json['ticket_closure_ratio'])
         : null;
-    avgTicketClosureTime = json['avg_ticket_closure_time'] != null
-        ? new AvgTicketClosureTime.fromJson(json['avg_ticket_closure_time'])
+    averageTicketClosureTime = json['average_ticket_closure_time'] != null
+        ? new AverageTicketClosureTime.fromJson(
+        json['average_ticket_closure_time'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['full_name'] = this.fullName;
+    data['fullname'] = this.fullname;
     if (this.counters != null) {
-      data['Counters'] = this.counters!.toJson();
+      data['counters'] = this.counters!.toJson();
     }
-    if (this.ticketHighlight != null) {
-      data['ticket_highlight'] = this.ticketHighlight!.toJson();
+    if (this.ticketHighlights != null) {
+      data['ticket_highlights'] = this.ticketHighlights!.toJson();
+    }
+    if (this.ticketClosureRatioUHF != null) {
+      data['ticket_closure_ratio_UHF'] = this.ticketClosureRatioUHF!.toJson();
     }
     if (this.ticketClosureRatio != null) {
       data['ticket_closure_ratio'] = this.ticketClosureRatio!.toJson();
     }
-    if (this.avgTicketClosureTime != null) {
-      data['avg_ticket_closure_time'] = this.avgTicketClosureTime!.toJson();
+    if (this.averageTicketClosureTime != null) {
+      data['average_ticket_closure_time'] =
+          this.averageTicketClosureTime!.toJson();
     }
     return data;
   }
@@ -102,50 +110,50 @@ class Counters {
   }
 }
 
-class TicketHighlight {
+class TicketHighlights {
   String? allOpen;
   String? quickSupport;
   String? dueToday;
   String? timelineRequired;
-  String? overdue;
-  String? unassigned;
+  String? overDue;
+  String? unAssigned;
 
-  TicketHighlight(
+  TicketHighlights(
       {this.allOpen,
         this.quickSupport,
         this.dueToday,
         this.timelineRequired,
-        this.overdue,
-        this.unassigned});
+        this.overDue,
+        this.unAssigned});
 
-  TicketHighlight.fromJson(Map<String, dynamic> json) {
+  TicketHighlights.fromJson(Map<String, dynamic> json) {
     allOpen = json['all_open'];
     quickSupport = json['quick_support'];
-    dueToday = json['due_today'];
+    dueToday = json['due-today'];
     timelineRequired = json['timeline_required'];
-    overdue = json['overdue'];
-    unassigned = json['unassigned'];
+    overDue = json['over_due'];
+    unAssigned = json['un_assigned'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['all_open'] = this.allOpen;
     data['quick_support'] = this.quickSupport;
-    data['due_today'] = this.dueToday;
+    data['due-today'] = this.dueToday;
     data['timeline_required'] = this.timelineRequired;
-    data['overdue'] = this.overdue;
-    data['unassigned'] = this.unassigned;
+    data['over_due'] = this.overDue;
+    data['un_assigned'] = this.unAssigned;
     return data;
   }
 }
 
-class TicketClosureRatio {
+class TicketClosureRatioUHF {
   String? mtd;
   String? ytd;
 
-  TicketClosureRatio({this.mtd, this.ytd});
+  TicketClosureRatioUHF({this.mtd, this.ytd});
 
-  TicketClosureRatio.fromJson(Map<String, dynamic> json) {
+  TicketClosureRatioUHF.fromJson(Map<String, dynamic> json) {
     mtd = json['mtd'];
     ytd = json['ytd'];
   }
@@ -158,13 +166,13 @@ class TicketClosureRatio {
   }
 }
 
-class AvgTicketClosureTime {
+class AverageTicketClosureTime {
   String? powerApp;
   String? nonPowerApp;
 
-  AvgTicketClosureTime({this.powerApp, this.nonPowerApp});
+  AverageTicketClosureTime({this.powerApp, this.nonPowerApp});
 
-  AvgTicketClosureTime.fromJson(Map<String, dynamic> json) {
+  AverageTicketClosureTime.fromJson(Map<String, dynamic> json) {
     powerApp = json['power_app'];
     nonPowerApp = json['non_power_app'];
   }
