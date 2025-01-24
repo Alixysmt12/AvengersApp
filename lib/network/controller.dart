@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../models/dashboard_response.dart';
 import '../models/login_response.dart';
+import '../models/lovs_response.dart';
+import '../models/module_response.dart';
 import '../models/project_wise_listing.dart';
 
 
@@ -116,11 +118,8 @@ class ProjectWiseListingController extends GetxController implements GetxService
   List<ProjectWiseTicketData> get getList => _list;
 
   Future<void> getData(String sid,String quickSupport) async {
-    _isLoading = true;
-    update();
     Response response = await repo.getListing(AppConstants.LISTING,sid,quickSupport);
-
-    late ProjectWiseTicketData responseModel;
+    update();
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = response.body;
@@ -153,7 +152,124 @@ class ProjectWiseListingController extends GetxController implements GetxService
       _list = [];
     }
 
+    _isLoading = true;
+    update();
+
+  }
+}
+
+///get LOVS
+class GetLOVSController extends GetxController implements GetxService {
+  final GetLOVSRepo repo;
+
+  GetLOVSController({required this.repo});
+
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  List<GetLovsResponse> _list = [];
+
+  List<GetLovsResponse> get getList => _list;
+
+  // Method to reset the state
+  void resetState() {
     _isLoading = false;
+    _list = [];
+    update(); // Update the state
+  }
+
+  Future<void> getData(String sid) async {
+    Response response = await repo.getLovs(AppConstants.LOV,sid);
+    update();
+
+    if (response.statusCode == 200) {
+      if(response.body["status"] == true){
+
+        Map<String, dynamic> responseBody = response.body;
+        GetLovsResponse responseModel = GetLovsResponse(
+          data: responseBody["data"] != null
+              ? LovData.fromJson(responseBody["data"])
+              : null,
+          status: response.body["status"],
+          message: response.body["message"],
+        );
+        _list = [];
+
+        _list.add(responseModel);
+
+        _isLoading = true;
+      }else{
+        _isLoading = true;
+        _list = [];
+      }
+    }else{
+      _isLoading = true;
+      _list = [];
+    }
+
+    _isLoading = true;
+    update();
+
+  }
+}
+
+///get Module LOVS
+class GetModuleController extends GetxController implements GetxService {
+  final GetModuleRepo repo;
+
+  GetModuleController({required this.repo});
+
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  List<GetModuleResponse> _list = [];
+
+  List<GetModuleResponse> get getList => _list;
+
+  // Method to reset the state
+  void resetState() {
+    _isLoading = false;
+    _list = [];
+    update(); // Update the state
+  }
+
+  Future<void> getData(String sid,String quickSupport) async {
+    Response response = await repo.getModule(AppConstants.LISTING,sid);
+    update();
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = response.body;
+      if(response.body["status"] == true){
+
+        final dynamic data = responseBody["data"];
+        List<ModuleData>? dataList;
+        if (data != null) {
+          if (data is List) {
+            dataList = data.map((item) => ModuleData.fromJson(item)).toList();
+          } else {
+            dataList = [ModuleData.fromJson(data)];
+          }
+        }
+        final GetModuleResponse responseModel = GetModuleResponse(
+          data: dataList,
+          status: responseBody["status"],
+          message: responseBody["message"],
+        );
+        _list = [];
+        _list.add(responseModel);
+        _isLoading = true;
+      }else{
+        _isLoading = true;
+        _list = [];
+      }
+    }else{
+      _isLoading = true;
+      _list = [];
+    }
+
+    _isLoading = true;
     update();
 
   }

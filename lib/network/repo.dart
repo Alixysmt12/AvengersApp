@@ -46,3 +46,31 @@ class ProjectWiseListingRepo {
     });
   }
 }
+
+class GetLOVSRepo {
+  late final ApiClient apiClient;
+
+  GetLOVSRepo({required this.apiClient});
+
+  Future<Response> getLovs(String action, String sid) async {
+    print("end url: $action");
+    return await apiClient.dashboard({
+      "action": action,
+      "sid": sid,
+    });
+  }
+}
+
+class GetModuleRepo {
+  late final ApiClient apiClient;
+
+  GetModuleRepo({required this.apiClient});
+
+  Future<Response> getModule(String action, String sid) async {
+    print("end url: $action");
+    return await apiClient.dashboard({
+      "action": action,
+      "sid": sid,
+    });
+  }
+}

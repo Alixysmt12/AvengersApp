@@ -36,6 +36,8 @@ Future<void> init() async {
 
   Get.lazyPut(() => LoginRep(apiClient: Get.find()));
   Get.lazyPut(() => DashboardRep(apiClient: Get.find()));
+  Get.lazyPut(() => ProjectWiseListingRepo(apiClient: Get.find()));
+  Get.lazyPut(() => GetLOVSRepo(apiClient: Get.find()));
 
 
 //    ---------------------------------------------------------
@@ -46,6 +48,8 @@ Future<void> init() async {
 
   Get.lazyPut(() => LoginController(loginRep: Get.find()));
   Get.lazyPut(() => DashboardController(repo: Get.find()));
+  Get.lazyPut(() => ProjectWiseListingController(repo: Get.find()));
+  Get.lazyPut(() => GetLOVSController(repo: Get.find()));
 
 
 }

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nice_loading_button/nice_loading_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../network/controller.dart';
 import '../routes/route_helper.dart';
 import '../widgets/custom_app_bar_widget.dart';
 import '../widgets/edit_text_widget.dart';
+import '../widgets/new_spinner_widget.dart';
 
 class AddSupportTicketsScreen extends StatefulWidget {
   const AddSupportTicketsScreen({super.key});
@@ -17,6 +20,18 @@ class AddSupportTicketsScreen extends StatefulWidget {
 }
 
 class _AddSupportTicketsScreenState extends State<AddSupportTicketsScreen> {
+
+  bool yearCheck = false;
+  List<Year> dropDownYear = [];
+  String selectedValueYear = "Select";
+  String selectedYearId = "0";
+  String? userId;
+  @override
+  void initState() {
+    super.initState();
+    getLovs();
+  }
+
 
   final TextEditingController _emailController = TextEditingController();
   @override
@@ -39,6 +54,23 @@ class _AddSupportTicketsScreenState extends State<AddSupportTicketsScreen> {
         padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 13),
         child: Column(
           children: [
+            MyCustomDropdownWidget<Year>(
+              isError: yearCheck,
+              title: 'Year*',
+              items: dropDownYear,
+              selectedItem: dropDownYear.isNotEmpty ? dropDownYear.first : null,
+              itemToString: (Year year) => year.string,
+              onChanged: (Year? value) {
+                setState(() {
+                  selectedValueYear = value?.string ?? "";
+                  selectedYearId = value?.id ?? "";
+                  // getMake(selectedYearId);
+                  // Handle selection change
+                });
+              },
+
+            ),
+
             EditTextWidget(
               controller: _emailController,
               hintText: "Project Name",
@@ -112,4 +144,37 @@ class _AddSupportTicketsScreenState extends State<AddSupportTicketsScreen> {
       )
     );
   }
+
+
+  Future<void> getLovs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    userId = prefs.getString('user_id');
+    Get.find<GetLOVSController>().resetState(); // Reset the state
+
+    await Get.find<GetLOVSController>().getData(userId ?? "");
+    var lovs = Get.find<GetLOVSController>();
+    if (lovs.getList.isNotEmpty &&
+        lovs.getList[0].data != null &&
+        lovs.getList[0].data!.projects != null) {
+
+      int projectNameLength = lovs.getList[0].data!.projects!.length;
+
+      List<Year> _getName = [];
+      for (int i = 0; i < projectNameLength; i++) {
+        _getName.add(Year(
+          lovs.getList[0].data!.projects![i].recordId!,
+          lovs.getList[0].data!.projects![i].projectName!,
+        ));
+      }
+      dropDownYear = _getName;
+    }
+  }
+}
+
+class Year {
+  final String id;
+  final String string;
+
+  Year(this.id, this.string);
 }

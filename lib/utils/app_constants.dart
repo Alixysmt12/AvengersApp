@@ -14,4 +14,6 @@ class AppConstants {
   static const String LOGIN_URL = "login";
   static const String DASHBOARD_URL = "dashboard";
   static const String LISTING = "listing";
+  static const String LOV = "lov";
+  static const String MODULE = "get_modules";
 }

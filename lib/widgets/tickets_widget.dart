@@ -1,3 +1,4 @@
+import 'package:avengers_app/theme/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -50,7 +51,7 @@ class ReusableDashboardTile extends StatelessWidget {
               Text(
                 title,
                 style: GoogleFonts.cabin(
-                  color: Colors.white,
+                  color: ColorConstants.primaryDarkColor,
                   fontSize: 15,
                 ),
               ),
@@ -59,7 +60,7 @@ class ReusableDashboardTile extends StatelessWidget {
           Text(
             count,
             style: GoogleFonts.cabin(
-              color: Colors.white,
+              color: ColorConstants.primaryDarkColor,
               fontSize: 25,
             ),
           ),
