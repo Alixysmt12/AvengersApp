@@ -42,6 +42,7 @@ dependencies:
   flutter_expandable_fab: ^2.3.0
   flutter_speed_dial: ^7.0.0
   shared_preferences: ^2.3.4
+#  image_picker: ^1.0.8
 
 dev_dependencies:
   flutter_test:

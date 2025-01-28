@@ -16,4 +16,8 @@ class AppConstants {
   static const String LISTING = "listing";
   static const String LOV = "lov";
   static const String MODULE = "get_modules";
+  static const String SCREEN = "get_screen";
+  static const String PROJECT_CATEGORY = "get_project_category";
+  static const String ADD_QUICK_SUPPORT = "add_quick_ticket";
+  static const String ADD_TICKETS = "add_ticket";
 }

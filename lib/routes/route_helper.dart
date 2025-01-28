@@ -1,4 +1,4 @@
-import 'package:avengers_app/uiscreen/add_support_tickets.dart';
+import 'package:avengers_app/uiscreen/add_quick_support_tickets.dart';
 import 'package:avengers_app/uiscreen/dashboard_screen.dart';
 import 'package:avengers_app/uiscreen/detaile_screen.dart';
 import 'package:avengers_app/uiscreen/login_screen.dart';
@@ -33,7 +33,7 @@ class RouteHelper {
     GetPage(name: splashScreen, page: () => SplashScreen()),
     GetPage(name: loginScreen, page: () => LoginScreen()),
     GetPage(name: dashboardScreen, page: () => DashboardScreen()),
-    GetPage(name: addSupportTicketScreen, page: () => AddSupportTicketsScreen()),
+    GetPage(name: addSupportTicketScreen, page: () => AddQuickSupportTicketsScreen()),
     GetPage(name: supportTicketFormScreen, page: () => SupportTicketFormScreen()),
     GetPage(name: detailScreen, page: () => DetailScreen()),
 

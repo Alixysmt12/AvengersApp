@@ -173,8 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               showCustomSnackBar(
                                   "User Id and password cannot be empty.");
 
-                            }else {
-
+                            }
+                            else {
                               if (buttonState == ButtonState.idle) {
                                 startLoading();
 
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   prefs.remove("user_id");
                                   prefs.setString("user_id", response.data!.userId!);
                                   // Simulate a delay or API call
-
+                                  stopLoading();
                                   Get.offNamed(RouteHelper.getDashboardScreen());
 
                                 } else {

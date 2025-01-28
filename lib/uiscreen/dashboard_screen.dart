@@ -662,7 +662,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     userId = prefs.getString('user_id');
     Get.find<DashboardController>().getData(userId ?? "");
-    Get.find<GetLOVSController>().getData(userId ?? "");
+    // Get.find<GetLOVSController>().getData(userId ?? "");
   }
 }
 

@@ -24,17 +24,11 @@ class GetLovsResponse {
 
 class LovData {
   List<Projects>? projects;
-  List<String>? complaintChannel;
-  List<TicketCategory>? ticketCategory;
-  List<String>? interface;
+  List<ComplaintChannel>? complaintChannel;
+  List<Interface>? interface;
   List<Users>? users;
 
-  LovData(
-      {this.projects,
-        this.complaintChannel,
-        this.ticketCategory,
-        this.interface,
-        this.users});
+  LovData({this.projects, this.complaintChannel, this.interface, this.users});
 
   LovData.fromJson(Map<String, dynamic> json) {
     if (json['projects'] != null) {
@@ -43,14 +37,18 @@ class LovData {
         projects!.add(new Projects.fromJson(v));
       });
     }
-    complaintChannel = json['complaint_channel'].cast<String>();
-    if (json['ticket_category'] != null) {
-      ticketCategory = <TicketCategory>[];
-      json['ticket_category'].forEach((v) {
-        ticketCategory!.add(new TicketCategory.fromJson(v));
+    if (json['complaint_channel'] != null) {
+      complaintChannel = <ComplaintChannel>[];
+      json['complaint_channel'].forEach((v) {
+        complaintChannel!.add(new ComplaintChannel.fromJson(v));
       });
     }
-    interface = json['interface'].cast<String>();
+    if (json['interface'] != null) {
+      interface = <Interface>[];
+      json['interface'].forEach((v) {
+        interface!.add(new Interface.fromJson(v));
+      });
+    }
     if (json['users'] != null) {
       users = <Users>[];
       json['users'].forEach((v) {
@@ -64,12 +62,13 @@ class LovData {
     if (this.projects != null) {
       data['projects'] = this.projects!.map((v) => v.toJson()).toList();
     }
-    data['complaint_channel'] = this.complaintChannel;
-    if (this.ticketCategory != null) {
-      data['ticket_category'] =
-          this.ticketCategory!.map((v) => v.toJson()).toList();
+    if (this.complaintChannel != null) {
+      data['complaint_channel'] =
+          this.complaintChannel!.map((v) => v.toJson()).toList();
     }
-    data['interface'] = this.interface;
+    if (this.interface != null) {
+      data['interface'] = this.interface!.map((v) => v.toJson()).toList();
+    }
     if (this.users != null) {
       data['users'] = this.users!.map((v) => v.toJson()).toList();
     }
@@ -96,24 +95,34 @@ class Projects {
   }
 }
 
-class TicketCategory {
-  String? recordId;
-  String? issueCategory;
-  String? status;
+class ComplaintChannel {
+  String? value;
 
-  TicketCategory({this.recordId, this.issueCategory, this.status});
+  ComplaintChannel({this.value});
 
-  TicketCategory.fromJson(Map<String, dynamic> json) {
-    recordId = json['record_id'];
-    issueCategory = json['issue_category'];
-    status = json['status'];
+  ComplaintChannel.fromJson(Map<String, dynamic> json) {
+    value = json['value'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['record_id'] = this.recordId;
-    data['issue_category'] = this.issueCategory;
-    data['status'] = this.status;
+    data['value'] = this.value;
+    return data;
+  }
+}
+
+class Interface {
+  String? value;
+
+  Interface({this.value});
+
+  Interface.fromJson(Map<String, dynamic> json) {
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['value'] = this.value;
     return data;
   }
 }
