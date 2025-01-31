@@ -24,6 +24,8 @@ class _AddQuickSupportTicketsScreenState
     extends State<AddQuickSupportTicketsScreen> {
   bool yearCheck = false;
   bool moduleCheck = false;
+  bool userCheck = false;
+  bool issueDetailCheck = false;
 
   List<ProjectName> dropDownYear = [];
   String selectedValueProject = "Select";
@@ -98,13 +100,15 @@ class _AddQuickSupportTicketsScreenState
 
                         EditTextWidget(
                           controller: _userController,
-                          hintText: "User Credentials",
+                          hintText: "User Credentials*",
                           icon: Icons.mail_outline,
+                          isError: userCheck,
                         ),
                         EditTextWidget(
                           controller: _issueDetailController,
-                          hintText: "Issue Details",
+                          hintText: "Issue Details*",
                           icon: Icons.mail_outline,
+                          isError: issueDetailCheck,
                         ),
                         SizedBox(
                           height: 50,
@@ -153,18 +157,21 @@ class _AddQuickSupportTicketsScreenState
                               onTap: (startLoading, stopLoading,
                                   buttonState) async {
 
-                                if (_userController.text.isEmpty ||
+                                if (_userController.text.isEmpty || _issueDetailController.text.isEmpty ||
                                    selectedProjectId == ""|| selectedModuleId == "") {
                                   setState(() {
                                     yearCheck = checkSelection(
                                         selectedValueProject);
                                     moduleCheck = checkSelection(
                                         selectedValueModule);
+                                    userCheck = _userController.text.isEmpty;
+                                    issueDetailCheck = _issueDetailController.text.isEmpty;
                                   });
 
                                   showCustomSnackBar("Please Fill Required Fields.");
 
-                                }else{
+                                }
+                                else{
                                   if (buttonState == ButtonState.idle) {
                                     startLoading();
 
@@ -175,9 +182,9 @@ class _AddQuickSupportTicketsScreenState
                                       .addQuickSupport(
                                     userId ?? "",
                                     selectedProjectId,
-                                    _userController.text,
+                                    _userController.text.toString(),
                                     selectedModuleId,
-                                    _issueDetailController.text,
+                                    _issueDetailController.text.toString(),
                                   )
                                       .then((response) async {
                                     if (response.status == true) {
@@ -191,8 +198,6 @@ class _AddQuickSupportTicketsScreenState
                                     }
                                   });
                                 }
-
-
                               },
                             ),
                           ),

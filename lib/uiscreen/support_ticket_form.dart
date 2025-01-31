@@ -14,6 +14,7 @@ import '../theme/color_constants.dart';
 import '../widgets/custom_app_bar_widget.dart';
 import '../widgets/edit_text_widget.dart';
 import '../widgets/new_spinner_widget.dart';
+import '../widgets/show_custom_snackbar.dart';
 
 class SupportTicketFormScreen extends StatefulWidget {
   const SupportTicketFormScreen({super.key});
@@ -28,23 +29,32 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
   bool moduleCheck = false;
   bool screenCheck = false;
   bool ticketCheck = false;
-  bool userCheck = false;
+  bool ticketSummaryCheck = false;
+  bool ticketDetailCheck = false;
+  bool interfaceCheck = false;
+  bool complaintChannelCheck = false;
   List<ProjectName> dropDownYear = [];
   List<ModuleName> dropDownModule = [];
   List<ScreenName> dropDownScreen = [];
   List<TicketCategory> dropDownTicketCat = [];
   List<UserData> dropDownUser = [];
+  List<Interface> dropDownInterface = [];
+  List<ComplaintChannel> dropDownComplaintChannel = [];
 
   String selectedValueProject = "Select";
-  String selectedProjectId = "0";
+  String selectedProjectId = "";
   String selectedValueModule = "Select";
-  String selectedModuleId = "0";
+  String selectedModuleId = "";
   String selectedValueScreen = "Select";
-  String selectedScreenId = "0";
+  String selectedScreenId = "";
   String selectedValueTicketCat = "Select";
-  String selectedTicketCatId = "0";
+  String selectedTicketCatId = "";
   String selectedValueUser = "Select";
-  String selectedUserId = "0";
+  String selectedUserId = "";
+  String selectedValueInterface = "Select";
+  String selectedInterfaceId = "";
+  String selectedValueComplaintChannel = "Select";
+  String selectedComplaintChannelId = "";
 
   // final picker = ImagePicker();
   List<File> selectedImages = [];
@@ -56,7 +66,8 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
     getLovs();
   }
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _ticketSummaryController = TextEditingController();
+  final TextEditingController _ticketsDetailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +139,19 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                       },
 
                     ),
-                    EditTextWidget(
-                      controller: _emailController,
-                      hintText: "Complaint channel",
-                      icon: Icons.mail_outline,
-                    ),
+                    MyCustomDropdownWidget<ComplaintChannel>(
+                      isError: complaintChannelCheck,
+                      title: 'Complaint channel*',
+                      items: dropDownComplaintChannel,
+                      selectedItem: dropDownComplaintChannel.isNotEmpty ? dropDownComplaintChannel.first : null,
+                      itemToString: (ComplaintChannel year) => year.string,
+                      onChanged: (ComplaintChannel? value) {
+                        setState(() {
+                          selectedValueComplaintChannel = value?.string ?? "";
+                        });
+                      },
 
+                    ),
                     MyCustomDropdownWidget<TicketCategory>(
                       isError: ticketCheck,
                       title: 'Tickets Category*',
@@ -148,19 +166,21 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                       },
 
                     ),
-                    EditTextWidget(
-                      controller: _emailController,
-                      hintText: "Tickets Category",
-                      icon: Icons.mail_outline,
-                    ),
-                    EditTextWidget(
-                      controller: _emailController,
-                      hintText: "Interface",
-                      icon: Icons.mail_outline,
-                    ),
+                    MyCustomDropdownWidget<Interface>(
+                      isError: interfaceCheck,
+                      title: 'Interface*',
+                      items: dropDownInterface,
+                      selectedItem: dropDownInterface.isNotEmpty ? dropDownInterface.first : null,
+                      itemToString: (Interface year) => year.string,
+                      onChanged: (Interface? value) {
+                        setState(() {
+                          selectedValueInterface = value?.string ?? "";
+                        });
+                      },
 
+                    ),
                     MyCustomDropdownWidget<UserData>(
-                      isError: userCheck,
+                      isError: ticketSummaryCheck,
                       title: 'User*',
                       items: dropDownUser,
                       selectedItem: dropDownUser.isNotEmpty ? dropDownUser.first : null,
@@ -172,6 +192,19 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                         });
                       },
 
+                    ),
+
+                    EditTextWidget(
+                      controller: _ticketSummaryController,
+                      hintText: "Tickets Summary",
+                      icon: Icons.mail_outline,
+                      isError: ticketSummaryCheck,
+                    ),
+                    EditTextWidget(
+                      controller: _ticketsDetailController,
+                      hintText: "Tickets Details*",
+                      icon: Icons.mail_outline,
+                      isError: ticketDetailCheck,
                     ),
 
                     SizedBox(height: 15,),
@@ -248,13 +281,52 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                           ),
                           onTap: (startLoading, stopLoading, buttonState) async {
 
+                            if (_ticketSummaryController.text.isEmpty || _ticketsDetailController.text.isEmpty || selectedProjectId == ""|| selectedModuleId == "" || selectedScreenId == ""|| selectedComplaintChannelId == ""|| selectedTicketCatId == ""|| selectedInterfaceId == ""|| selectedInterfaceId == "") {
+                              setState(() {
+                                yearCheck = checkSelection(selectedValueProject);
+                                moduleCheck = checkSelection(selectedValueModule);
+                                screenCheck = checkSelection(selectedValueScreen);
+                                complaintChannelCheck = checkSelection(selectedValueComplaintChannel);
+                                ticketCheck = checkSelection(selectedValueTicketCat);
+                                interfaceCheck = checkSelection(selectedValueInterface);
+                                ticketSummaryCheck = _ticketSummaryController.text.isEmpty;
+                                ticketDetailCheck = _ticketsDetailController.text.isEmpty;
+                              });
 
-                            if (buttonState == ButtonState.idle) {
-                              startLoading();
-                              // Simulate a delay or API call
-                              await Future.delayed(const Duration(seconds: 5));
-                              stopLoading();
-                              Get.offNamed(RouteHelper.getDashboardScreen());
+                              showCustomSnackBar("Please Fill Required Fields.");
+
+                            }
+                            else{
+                              if (buttonState == ButtonState.idle) {
+                                startLoading();
+                              }
+                              var authController = Get.find<AddTicketsController>();
+                              authController
+                                  .addQuickSupport(
+                                userId ?? "",
+                                selectedProjectId,
+                                selectedComplaintChannelId,
+                                selectedTicketCatId,
+                                selectedInterfaceId,
+                                selectedModuleId,
+                                _ticketSummaryController.text.toString(),
+                                  _ticketsDetailController.text.toString(),
+                                selectedTicketCatId,
+                                "yes",
+                                "",""
+
+                              )
+                                  .then((response) async {
+                                if (response.status == true) {
+                                  stopLoading();
+                                  Get.offNamed(RouteHelper.getDashboardScreen());
+
+                                } else {
+                                  stopLoading();
+                                  showCustomSnackBar(response.message.toString(),
+                                      title: "Error");
+                                }
+                              });
                             }
                           },
                         ),
@@ -308,13 +380,13 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
       }
       dropDownYear = _getName;
 
-      int ticketCatLength = lovs.getList[0].data!.ticketCategory!.length;
+      int ticketCatLength = lovs.getList[0].data!.category!.length;
 
       List<TicketCategory> _getTicket = [];
       for (int i = 0; i < ticketCatLength; i++) {
         _getTicket.add(TicketCategory(
-          lovs.getList[0].data!.ticketCategory![i].recordId!,
-          lovs.getList[0].data!.ticketCategory![i].issueCategory!,
+          lovs.getList[0].data!.category![i].recordId!,
+          lovs.getList[0].data!.category![i].issueCategory!,
         ));
       }
       dropDownTicketCat = _getTicket;
@@ -329,6 +401,24 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
         ));
       }
       dropDownUser = _getUser;
+
+      int interfaceLength = lovs.getList[0].data!.interface!.length;
+      List<Interface> _getInterface = [];
+      for (int i = 0; i < interfaceLength; i++) {
+        _getInterface.add(Interface(
+          lovs.getList[0].data!.interface![i].value !,
+        ));
+      }
+      dropDownInterface = _getInterface;
+
+      int compChanLength = lovs.getList[0].data!.complaintChannel!.length;
+      List<ComplaintChannel> _getComplaintChannel = [];
+      for (int i = 0; i < compChanLength; i++) {
+        _getComplaintChannel.add(ComplaintChannel(
+          lovs.getList[0].data!.complaintChannel![i].value !,
+        ));
+      }
+      dropDownComplaintChannel = _getComplaintChannel;
     }
   }
   Future<void> getModule(String projectId) async {
@@ -375,24 +465,27 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
     setState(() {});
   }
 
-  /*Future getImages() async {
-    final pickedFile = await picker.pickMultiImage(
-        imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
-    List<XFile> xfilePick = pickedFile;
-
-    setState(
-          () {
-        if (xfilePick.isNotEmpty) {
-          for (var i = 0; i < xfilePick.length; i++) {
-            selectedImages.add(File(xfilePick[i].path));
-          }
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('')));
-        }
-      },
-    );
-  }*/
+  bool checkSelection(String select) {
+    return select.toLowerCase() == "select";
+  }
+  // Future getImages() async {
+  //   final pickedFile = await picker.pickMultiImage(
+  //       imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+  //   List<XFile> xfilePick = pickedFile;
+  //
+  //   setState(
+  //         () {
+  //       if (xfilePick.isNotEmpty) {
+  //         for (var i = 0; i < xfilePick.length; i++) {
+  //           selectedImages.add(File(xfilePick[i].path));
+  //         }
+  //       } else {
+  //         ScaffoldMessenger.of(context)
+  //             .showSnackBar(const SnackBar(content: Text('')));
+  //       }
+  //     },
+  //   );
+  // }
 }
 class ProjectName {
   final String id;
@@ -424,4 +517,15 @@ class UserData {
   final String string;
 
   UserData(this.id, this.string);
+}
+
+class Interface {
+  final String string;
+
+  Interface(this.string);
+}
+class ComplaintChannel {
+  final String string;
+
+  ComplaintChannel(this.string);
 }

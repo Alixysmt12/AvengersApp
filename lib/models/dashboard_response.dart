@@ -24,6 +24,7 @@ class DashboardModel {
 
 class DashboardData {
   String? fullname;
+  String? greetings;
   Counters? counters;
   TicketHighlights? ticketHighlights;
   TicketClosureRatioUHF? ticketClosureRatioUHF;
@@ -32,6 +33,7 @@ class DashboardData {
 
   DashboardData(
       {this.fullname,
+        this.greetings,
         this.counters,
         this.ticketHighlights,
         this.ticketClosureRatioUHF,
@@ -40,6 +42,7 @@ class DashboardData {
 
   DashboardData.fromJson(Map<String, dynamic> json) {
     fullname = json['fullname'];
+    greetings = json['greetings'];
     counters = json['counters'] != null
         ? new Counters.fromJson(json['counters'])
         : null;
@@ -61,6 +64,7 @@ class DashboardData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['fullname'] = this.fullname;
+    data['greetings'] = this.greetings;
     if (this.counters != null) {
       data['counters'] = this.counters!.toJson();
     }

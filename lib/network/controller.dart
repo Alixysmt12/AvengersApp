@@ -1,6 +1,8 @@
 import 'package:avengers_app/models/screen_response.dart';
 import 'package:avengers_app/network/repo.dart';
+import 'package:avengers_app/uiscreen/dashboard_screen.dart';
 import 'package:avengers_app/utils/app_constants.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 
 import '../models/dashboard_response.dart';
@@ -9,6 +11,7 @@ import '../models/lovs_response.dart';
 import '../models/module_response.dart';
 import '../models/project_category_response.dart';
 import '../models/project_wise_listing.dart';
+import '../uiscreen/no_connectivity_screen.dart';
 
 
 ///login
@@ -41,6 +44,10 @@ class LoginController extends GetxController implements GetxService {
 
         );
 
+      }else{
+        responseModel = LoginResponse(
+            status: response.body["status"],
+            message: response.body["message"]);
       }
     }else{
       responseModel = LoginResponse(
@@ -71,6 +78,17 @@ class DashboardController extends GetxController implements GetxService {
   Future<DashboardModel> getData(String sid) async {
     _isLoading = true;
     update();
+
+    // Check internet connectivity
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult[0].name == ConnectivityResult.none.name) {
+      // No internet, navigate to NoConnectivityScreen
+      Get.to(() => NoConnectivityScreen());
+      // return;
+    }else{
+      Get.to(() => DashboardScreen());
+    }
+
     Response response = await repo.dashboard(AppConstants.DASHBOARD_URL,sid);
 
     late DashboardModel responseModel;
@@ -92,6 +110,10 @@ class DashboardController extends GetxController implements GetxService {
 
         _list.add(responseModel);
 
+      }else{
+        responseModel = DashboardModel(
+            status: response.body["status"],
+            message: response.body["message"]);
       }
     }else{
       responseModel = DashboardModel(
@@ -118,6 +140,13 @@ class ProjectWiseListingController extends GetxController implements GetxService
   List<ProjectWiseTicketData> _list = [];
 
   List<ProjectWiseTicketData> get getList => _list;
+
+  // Method to reset the state
+  void resetState() {
+    _isLoading = false;
+    _list = [];
+    update(); // Update the state
+  }
 
   Future<void> getData(String sid,String quickSupport) async {
     Response response = await repo.getListing(AppConstants.LISTING,sid,quickSupport);

@@ -9,6 +9,7 @@ class AppConstants {
 
   ///BASE URL
   static const String BASE_URL = "http://avengers.pk/mobileservices/mobileservices.php";
+  // static const String BASE_URL = "http://uat.avengers.pk/mobileservices/mobileservices.php";
 
   ///Ends Points URL Actions
   static const String LOGIN_URL = "login";

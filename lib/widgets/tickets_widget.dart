@@ -11,6 +11,7 @@ class ReusableDashboardTile extends StatelessWidget {
   final double iconSize;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry padding;
+  final Color textColor; // New parameter for text color
 
   const ReusableDashboardTile({
     Key? key,
@@ -20,8 +21,9 @@ class ReusableDashboardTile extends StatelessWidget {
     required this.count,
     this.borderRadius = 19.0,
     this.iconSize = 26.0,
-    this.margin = const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+    this.margin = const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
     this.padding = const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+    this.textColor = Colors.white, // Default text color is white
   }) : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class ReusableDashboardTile extends StatelessWidget {
               Text(
                 title,
                 style: GoogleFonts.cabin(
-                  color: ColorConstants.primaryDarkColor,
+                  color: textColor, // Use the passed text color
                   fontSize: 15,
                 ),
               ),
@@ -60,7 +62,7 @@ class ReusableDashboardTile extends StatelessWidget {
           Text(
             count,
             style: GoogleFonts.cabin(
-              color: ColorConstants.primaryDarkColor,
+              color: textColor, // Use the passed text color
               fontSize: 25,
             ),
           ),
@@ -69,3 +71,4 @@ class ReusableDashboardTile extends StatelessWidget {
     );
   }
 }
+

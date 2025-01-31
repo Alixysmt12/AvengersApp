@@ -25,10 +25,16 @@ class GetLovsResponse {
 class LovData {
   List<Projects>? projects;
   List<ComplaintChannel>? complaintChannel;
+  List<Category>? category;
   List<Interface>? interface;
   List<Users>? users;
 
-  LovData({this.projects, this.complaintChannel, this.interface, this.users});
+  LovData(
+      {this.projects,
+        this.complaintChannel,
+        this.category,
+        this.interface,
+        this.users});
 
   LovData.fromJson(Map<String, dynamic> json) {
     if (json['projects'] != null) {
@@ -41,6 +47,12 @@ class LovData {
       complaintChannel = <ComplaintChannel>[];
       json['complaint_channel'].forEach((v) {
         complaintChannel!.add(new ComplaintChannel.fromJson(v));
+      });
+    }
+    if (json['category'] != null) {
+      category = <Category>[];
+      json['category'].forEach((v) {
+        category!.add(new Category.fromJson(v));
       });
     }
     if (json['interface'] != null) {
@@ -65,6 +77,9 @@ class LovData {
     if (this.complaintChannel != null) {
       data['complaint_channel'] =
           this.complaintChannel!.map((v) => v.toJson()).toList();
+    }
+    if (this.category != null) {
+      data['category'] = this.category!.map((v) => v.toJson()).toList();
     }
     if (this.interface != null) {
       data['interface'] = this.interface!.map((v) => v.toJson()).toList();
@@ -111,18 +126,24 @@ class ComplaintChannel {
   }
 }
 
-class Interface {
-  String? value;
+class Category {
+  String? recordId;
+  String? issueCategory;
+  String? status;
 
-  Interface({this.value});
+  Category({this.recordId, this.issueCategory, this.status});
 
-  Interface.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
+  Category.fromJson(Map<String, dynamic> json) {
+    recordId = json['record_id'];
+    issueCategory = json['issue_category'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
+    data['record_id'] = this.recordId;
+    data['issue_category'] = this.issueCategory;
+    data['status'] = this.status;
     return data;
   }
 }
@@ -142,6 +163,23 @@ class Users {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['user_id'] = this.userId;
     data['full_name'] = this.fullName;
+    return data;
+  }
+}
+
+
+class Interface {
+  String? value;
+
+  Interface({this.value});
+
+  Interface.fromJson(Map<String, dynamic> json) {
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['value'] = this.value;
     return data;
   }
 }

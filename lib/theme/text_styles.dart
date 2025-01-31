@@ -15,7 +15,7 @@ class TextStyles {
   );
 
   static const TextStyle bodyLight = TextStyle(
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: FontWeight.normal,
     color: Colors.black,
   );

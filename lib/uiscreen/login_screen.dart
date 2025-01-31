@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nice_loading_button/nice_loading_button.dart';
@@ -18,13 +19,49 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderStateMixin {
+
+  double _opacity = 0.0;
+  double _scale = 0.8;
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
 
   bool isLoading = false; // Add a boolean to track loading state
   bool isObscure = true;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        _opacity = 1.0;
+      });
+    });
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1200),
+    )..forward();
+
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(-1.5, 0), // Start from left
+      end: Offset(0, 0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+
+    Future.delayed(Duration(milliseconds: 500), () {
+      setState(() {
+        _opacity = 1.0;
+        _scale = 1.0;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +84,14 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 70),
               // Image at the top
-              Image.asset(
+            AnimatedOpacity(
+              duration: Duration(seconds: 1),
+              opacity: _opacity,
+              child: Image.asset(
                 'assets/images/avengers_logo.png',
                 height: 190,
               ),
+            ),
               const SizedBox(height: 40),
 
               // White background with curved top-right radius
@@ -75,140 +116,147 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     // Username TextField
-                    EditTextWidget(
+                  SlideTransition(
+                    position: _offsetAnimation,
+                    child: EditTextWidget(
                       controller: _emailController,
                       hintText: "Username",
                       icon: Icons.mail_outline,
                     ),
+                  ),
                     const SizedBox(height: 15),
 
                     // Password TextField
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Password",
-                          style: TextStyle(
-                            color: ColorConstants.textPrimary,
-                            fontSize: 13,
+                    SlideTransition(
+                      position: _offsetAnimation,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Password",
+                            style: TextStyle(
+                              color: ColorConstants.textPrimary,
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          style: TextStyle(color: ColorConstants.textPrimary),
-                          obscureText: isObscure,
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15.0,
-                              horizontal: 12.0,
-                            ),
-                            hintText: "Password",
-                            hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide.none, // Remove the border
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide.none, // Remove the border
-                            ),
-                            fillColor: Colors.grey[200], // Set background color to light gray
-                            filled: true,
-                            suffixIcon: IconButton(
-                              color: ColorConstants.primaryColor,
-                              icon: Icon(
-                                isObscure ? Icons.visibility : Icons.visibility_off,
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            style: TextStyle(color: ColorConstants.textPrimary),
+                            obscureText: isObscure,
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 15.0,
+                                horizontal: 12.0,
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  isObscure = !isObscure;
-                                });
-                              },
+                              hintText: "Password",
+                              hintStyle: TextStyle(color: Colors.grey), // Set hint text color to gray
+                              enabledBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide.none, // Remove the border
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide.none, // Remove the border
+                              ),
+                              fillColor: Colors.grey[200], // Set background color to light gray
+                              filled: true,
+                              suffixIcon: IconButton(
+                                color: ColorConstants.primaryColor,
+                                icon: Icon(
+                                  isObscure ? Icons.visibility : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    isObscure = !isObscure;
+                                  });
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 50),
 
                     Center(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width, // Full width of the screen
-                        height: 50, // Height of the button
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8), // Same border radius as button
-                          gradient: LinearGradient(
-                            colors: [ColorConstants.primaryColor, ColorConstants.accentColor], // Example gradient colors
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: LoadingButton(
-                          height: 50,
-                          borderRadius: 8,
-                          animate: true,
-                          color: Colors.transparent, // Make button color transparent
-                          width: MediaQuery.of(context).size.width,
-                          loader: Container(
-                            padding: const EdgeInsets.all(10),
-                            width: 40,
-                            height: 40,
-                            child: const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      child: AnimatedOpacity(
+                        duration: Duration(milliseconds: 600),
+                        opacity: _opacity,
+                        child: AnimatedScale(
+                          duration: Duration(milliseconds: 500),
+                          scale: _scale,
+                          curve: Curves.easeOutBack, // Smooth bounce effect
+                          child: Container(
+                            width: MediaQuery.of(context).size.width, // Full width of the screen
+                            height: 50, // Height of the button
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8), // Same border radius as button
+                              gradient: LinearGradient(
+                                colors: [ColorConstants.primaryColor, ColorConstants.accentColor], // Example gradient colors
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onTap: (startLoading, stopLoading, buttonState) async {
+                            child: LoadingButton(
+                              height: 50,
+                              borderRadius: 8,
+                              animate: true,
+                              color: Colors.transparent, // Make button color transparent
+                              width: MediaQuery.of(context).size.width,
+                              loader: Container(
+                                padding: const EdgeInsets.all(10),
+                                width: 40,
+                                height: 40,
+                                child: const CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              ),
+                              child: const Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onTap: (startLoading, stopLoading, buttonState) async {
 
-                            if (_emailController.text.isEmpty ||
-                                _passwordController.text.isEmpty) {
-                              showCustomSnackBar(
-                                  "User Id and password cannot be empty.");
+                                var connectivityResult = await Connectivity().checkConnectivity();
 
-                            }
-                            else {
-                              if (buttonState == ButtonState.idle) {
-                                startLoading();
-
-                              }
-                              var authController = Get.find<LoginController>();
-                              authController
-                                  .login(
-                                _emailController.text,
-                                _passwordController.text,
-                              )
-                                  .then((response) async {
-                                if (response.status == true) {
-
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-                                  AppConstants.SIGNUP_TOKEN = response.data!.userId!;
-
-                                  prefs.remove("user_id");
-                                  prefs.setString("user_id", response.data!.userId!);
-                                  // Simulate a delay or API call
-                                  stopLoading();
-                                  Get.offNamed(RouteHelper.getDashboardScreen());
-
-                                } else {
-                                  stopLoading();
-                                  showCustomSnackBar(response.message.toString(),
-                                      title: "Error");
+                                if (_emailController.text.isEmpty ||
+                                    _passwordController.text.isEmpty) {
+                                  showCustomSnackBar("User Id and password cannot be empty.");
                                 }
-                              });
 
-
-                            }
-
-                          },
+                                else if(connectivityResult[0].name == ConnectivityResult.none.name){
+                                  showCustomSnackBar("Check your internet connection..", title: "Error");
+                                }
+                                else {
+                                  if (buttonState == ButtonState.idle) {
+                                    startLoading();
+                                  }
+                                  var authController = Get.find<LoginController>();
+                                  authController.login(
+                                    _emailController.text,
+                                    _passwordController.text,
+                                  ).then((response) async {
+                                    if (response.status == true) {
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      AppConstants.SIGNUP_TOKEN = response.data!.userId!;
+                                      prefs.remove("user_id");
+                                      prefs.setString("user_id", response.data!.userId!);
+                                      stopLoading();
+                                      Get.offNamed(RouteHelper.getDashboardScreen());
+                                    } else {
+                                      stopLoading();
+                                      showCustomSnackBar(response.message.toString(), title: "Error");
+                                    }
+                                  });
+                                }
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     )

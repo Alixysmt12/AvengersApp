@@ -5,9 +5,12 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../routes/route_helper.dart';
+import '../utils/clearing_shared_preference.dart';
 import '../widgets/tickets_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -17,7 +20,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProviderStateMixin {
+
   final _key = GlobalKey<ExpandableFabState>();
   String? userId;
 
@@ -35,6 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         floatingActionButton: SpeedDial(
           icon: Icons.add,
           backgroundColor: ColorConstants.primaryColor,
+          foregroundColor: Colors.white, // Change icon color
           // Custom primary color
           activeIcon: Icons.close,
           spacing: 10,
@@ -47,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               labelStyle: TextStyle(fontSize: 16.0),
               onTap: () {
                 // Handle 'Add Quick Support Ticket' tap
-                Get.toNamed(RouteHelper.getAddSupportTicketsScreen());
+                // Get.toNamed(RouteHelper.getAddSupportTicketsScreen());
                 // Navigate or perform desired action
               },
             ),
@@ -58,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               labelStyle: TextStyle(fontSize: 16.0),
               onTap: () {
                 // Handle 'Add Support Ticket' tap
-                Get.toNamed(RouteHelper.getSupportTicketsFormScreen());
+                // Get.toNamed(RouteHelper.getSupportTicketsFormScreen());
                 // Navigate or perform desired action
               },
             ),
@@ -74,7 +79,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     height: MediaQuery.of(context).size.height,
                     child: Center(
                       child: Container(
-                        child: SpinKitSquareCircle(
+                        child: SpinKitSpinningLines(
                           color: ColorConstants.accentColor,
                           size: 50.0,
                         ),
@@ -108,7 +113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Hello,',
+                                          dashboardData.getList[0].data!.greetings ?? "",
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium
@@ -119,9 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                         SizedBox(height: 5),
                                         Text(
-                                          dashboardData
-                                                  .getList[0].data!.fullname ??
-                                              "",
+                                          dashboardData.getList[0].data!.fullname ?? "",
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayLarge,
@@ -137,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             height: 40,
                                           ),
                                           onPressed: () {
-                                            // Handle notification icon press
+
                                           },
                                         ),
                                         IconButton(
@@ -147,7 +150,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             height: 40,
                                           ),
                                           onPressed: () {
-                                            // Handle logout icon press
+                                            QuickAlert.show(
+                                              confirmBtnText: "Yes, Logout!",
+                                              context: context,
+                                              type: QuickAlertType.error,
+                                              title: 'Are You Sure?',
+                                              text: 'You will be logged out of the system!',
+                                              onConfirmBtnTap: () {
+                                                clearSharedPreferences();
+                                                Get.offNamed(RouteHelper.getLoginScreen());
+                                                Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  RouteHelper.getLoginScreen(),
+                                                      (Route<dynamic> route) => false,
+                                                );
+                                              },
+                                            );
                                           },
                                         ),
                                       ],
@@ -183,7 +201,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         child: Container(
                                           height: 150,
                                           decoration: BoxDecoration(
-                                            color: ColorConstants.primaryColor,
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                ColorConstants.primaryColor, // First color
+                                                ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                              ],
+                                              begin: Alignment.bottomCenter, // start at the top center
+                                              end: Alignment.topCenter, // end at the bottom center
+                                            ),
                                             borderRadius: BorderRadius.circular(19),
                                           ),
                                           child: Padding(
@@ -203,11 +228,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ),
                                                 SizedBox(height: 4),
                                                 Text(
-                                                  dashboardData.getList[0].data!.counters?.pendingAtSupport ??
-                                                      "00",
+                                                  dashboardData.getList[0].data!.counters?.pendingAtSupport ?? "00",
                                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
                                                     color: ColorConstants.textLight,
-                                                    fontSize: 40,
+                                                    fontSize: 35,
                                                   ),
                                                 ),
                                               ],
@@ -217,7 +241,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                     ),
                                     SizedBox(width: 15),
-                                    // Second container (smaller)
                                     Expanded(
                                       flex: 2,
                                       child: GestureDetector(
@@ -255,7 +278,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   dashboardData.getList[0].data!.counters?.pendingAtQa ?? "00",
                                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
                                                     color: ColorConstants.primaryColor,
-                                                    fontSize: 40,
+                                                    fontSize: 35,
                                                   ),
                                                 ),
                                               ],
@@ -308,7 +331,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   dashboardData.getList[0].data!.counters?.pendingAtDev ?? "00",
                                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
                                                     color: ColorConstants.primaryColor,
-                                                    fontSize: 40,
+                                                    fontSize: 35,
                                                   ),
                                                 ),
                                               ],
@@ -331,7 +354,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         child: Container(
                                           height: 150,
                                           decoration: BoxDecoration(
-                                            color: ColorConstants.primaryColor,
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                ColorConstants.primaryColor, // First color
+                                                ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                              ],
+                                              begin: Alignment.bottomCenter, // start at the top center
+                                              end: Alignment.topCenter, // end at the bottom center
+                                            ),
                                             borderRadius: BorderRadius.circular(19),
                                           ),
                                           child: Padding(
@@ -347,15 +377,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 SizedBox(height: 8),
                                                 Text(
                                                   'Pending at Power App',
-                                                  style: Theme.of(context).textTheme.bodyMedium,
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                    color: ColorConstants.textLight, // Adjust text color as needed
+                                                  ),
                                                 ),
                                                 SizedBox(height: 4),
                                                 Text(
-                                                  dashboardData.getList[0].data!.counters?.pendingAtPowerapp ??
-                                                      "00",
+                                                  dashboardData.getList[0].data!.counters?.pendingAtPowerapp ?? "00",
                                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                    color: ColorConstants.textLight,
-                                                    fontSize: 40,
+                                                    color: ColorConstants.textLight, // Adjust text color as needed
+                                                    fontSize: 35,
                                                   ),
                                                 ),
                                               ],
@@ -364,6 +395,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                       ),
                                     ),
+
                                   ],
                                 ),
 
@@ -477,7 +509,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onTap: () {
                                     Get.toNamed(
                                       RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "over_due"},
+                                      arguments: {"listing": "un_assigned"},
                                     );
                                   },
                                   child: ReusableDashboardTile(
@@ -492,9 +524,121 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "00",
                                   ),
                                 ),
+
                                 SizedBox(height: 15),
                                 Text(
-                                  'Tickets Close Ratio UHF',
+                                  'Average Ticket Closure Time',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                    color: ColorConstants.textPrimary,
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                                Row(
+                                  children: [
+                                    // First container (larger)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              ColorConstants.primaryColor, // First color
+                                              ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                            ],
+                                            begin: Alignment.bottomCenter, // start at the top center
+                                            end: Alignment.topCenter, // end at the bottom center// End at the bottom-right corner
+                                          ),
+                                          borderRadius: BorderRadius.circular(19),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(11.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/icon4.png',
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Power-App',
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  color: ColorConstants.textLight, // You can adjust the text color
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                dashboardData.getList[0].data!.averageTicketClosureTime?.powerApp ?? "00",
+                                                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                  color: ColorConstants.textLight, // You can adjust the text color
+                                                  fontSize: 35,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    SizedBox(width: 15),
+                                    // Second container (smaller)
+                                    Expanded(
+                                      flex: 3,
+                                      child: Container(
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              ColorConstants.primaryColor, // First color
+                                              ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                            ],
+                                            begin: Alignment.bottomCenter, // start at the top center
+                                            end: Alignment.topCenter, // end at the bottom center
+                                          ),
+                                          borderRadius: BorderRadius.circular(19),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(11.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/icon11.png',
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'Non Power-App',
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  color: ColorConstants.textLight, // You can adjust the text color as needed
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                dashboardData.getList[0].data!.averageTicketClosureTime?.nonPowerApp ?? "00",
+                                                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                  color: ColorConstants.textLight, // You can adjust the text color as needed
+                                                  fontSize: 35,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+
+                                SizedBox(height: 15),
+                                Text(
+                                  'Tickets Close Ratio [UHF Side]',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
@@ -507,140 +651,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    CircularProgressBarWithLabel(
-                                        progress: double.tryParse(dashboardData
-                                                    .getList[0]
-                                                    .data!
-                                                    .ticketClosureRatioUHF
-                                                    ?.mtd ??
-                                                "0") ??
-                                            0.0),
-                                    SizedBox(
-                                      width: 15,
+                                    Expanded(
+                                      child: CircularProgressBarWithLabel(
+                                          progress: double.tryParse(dashboardData
+                                              .getList[0]
+                                              .data!
+                                              .ticketClosureRatioUHF
+                                              ?.mtd ?? "0") ?? 0.0),
                                     ),
-                                    CircularProgressBarWithLabel2(
-                                        progress: double.tryParse(dashboardData
-                                                    .getList[0]
-                                                    .data!
-                                                    .ticketClosureRatioUHF
-                                                    ?.ytd ??
-                                                "0") ??
-                                            0.0),
+                                    SizedBox(width: 15),
+                                    Expanded(
+                                      child: CircularProgressBarWithLabel2(
+                                          progress: double.tryParse(dashboardData
+                                              .getList[0]
+                                              .data!
+                                              .ticketClosureRatioUHF
+                                              ?.ytd ?? "0") ?? 0.0),
+                                    ),
                                   ],
                                 ),
+
                                 SizedBox(height: 15),
                                 Text(
-                                  'Average Ticket Closure Time',
+                                  'Tickets Close Ratio [Client Side] ',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
                                       ?.copyWith(
-                                        color: ColorConstants.textPrimary,
-                                      ),
+                                    color: ColorConstants.textPrimary,
+                                  ),
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Row(
                                   children: [
-                                    // First container (larger)
                                     Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: ColorConstants.primaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(19),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(11.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/icon4.png',
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                'Power-App',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                dashboardData
-                                                        .getList[0]
-                                                        .data!
-                                                        .averageTicketClosureTime
-                                                        ?.powerApp ??
-                                                    "00",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .displayLarge
-                                                    ?.copyWith(
-                                                      color: ColorConstants
-                                                          .textLight,
-                                                      fontSize: 40,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: CircularProgressBarWithLabel(
+                                          progress: double.tryParse(dashboardData
+                                              .getList[0]
+                                              .data!
+                                              .ticketClosureRatio
+                                              ?.mtd ?? "0") ?? 0.0),
                                     ),
                                     SizedBox(width: 15),
-                                    // Second container (smaller)
                                     Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          color: ColorConstants.primaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(19),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(11.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/icon11.png',
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                'Non Power-App',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                dashboardData
-                                                        .getList[0]
-                                                        .data!
-                                                        .averageTicketClosureTime
-                                                        ?.nonPowerApp ??
-                                                    "00",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .displayLarge
-                                                    ?.copyWith(
-                                                      color: ColorConstants
-                                                          .textLight,
-                                                      fontSize: 40,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      child: CircularProgressBarWithLabel2(
+                                          progress: double.tryParse(dashboardData
+                                              .getList[0]
+                                              .data!
+                                              .ticketClosureRatio
+                                              ?.ytd ?? "0") ?? 0.0),
                                     ),
                                   ],
                                 ),
@@ -717,9 +778,12 @@ class CircularProgressBarPainter extends CustomPainter {
     Paint progressPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 20; // Increased stroke width
+// Ensure progress is at least a tiny value to prevent errors
+    double safeProgress = progress == 0.0 ? 0.0001 : progress;
+
     progressPaint.shader = SweepGradient(
       startAngle: 3.14, // Starting angle
-      endAngle: 3.14 + 3.14 * progress, // Adjust the sweep based on progress
+      endAngle: 3.14 + 3.14 * safeProgress, // Ensure a non-zero sweep angle
       colors: [
         ColorConstants.dashboardColor2,
         ColorConstants.dashboardColor3
@@ -798,7 +862,7 @@ class CircularProgressBarWithLabel2 extends StatelessWidget {
                   ?.copyWith(fontWeight: FontWeight.bold)),
           CustomPaint(
             size: Size(140, 100), // Adjust the size of the progress bar
-            painter: CircularProgressBarPainter(
+            painter: CircularProgressBarPainter2(
                 progress: progress / 100), // 72% progress
           ),
         ],
@@ -823,9 +887,11 @@ class CircularProgressBarPainter2 extends CustomPainter {
     Paint progressPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 20; // Increased stroke width
+    double safeProgress = progress == 0.0 ? 0.0001 : progress;
+
     progressPaint.shader = SweepGradient(
       startAngle: 3.14, // Starting angle
-      endAngle: 3.14 + 3.14 * progress, // Adjust the sweep based on progress
+      endAngle: 3.14 + 3.14 * safeProgress, // Ensure a non-zero sweep angle
       colors: [
         ColorConstants.dashboardColor8,
         ColorConstants.dashboardColor9
