@@ -37,7 +37,7 @@ class _DetailScreenState extends State<DetailScreen> {
         },
         onNotificationPressed: () {
           // Handle notification icon press
-          Get.back();
+          Get.toNamed(RouteHelper.getNotificationScreen());
         },
         onLogoutPressed: () {
           QuickAlert.show(

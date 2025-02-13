@@ -10,6 +10,8 @@ import '../theme/color_constants.dart';
 import '../utils/app_constants.dart';
 import '../widgets/edit_text_widget.dart';
 import '../widgets/show_custom_snackbar.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter/services.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -21,6 +23,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderStateMixin {
 
+  bool showFingerprint = false;
+
   double _opacity = 0.0;
   double _scale = 0.8;
   late AnimationController _controller;
@@ -31,10 +35,83 @@ class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderSta
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final LocalAuthentication auth = LocalAuthentication();
 
+  Future<void> authenticate() async {
+    bool isAuthenticated = false;
+    try {
+      isAuthenticated = await auth.authenticate(
+        localizedReason: 'Please authenticate to proceed',
+        options: const AuthenticationOptions(
+          biometricOnly: true, // Use only biometrics (no PIN fallback)
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+      );
+    } on PlatformException catch (e) {
+      print("Error: $e");
+    }
+
+    if (isAuthenticated) {
+      print("Authentication successful!");
+      // Navigate to the dashboard or perform some action
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? email = prefs.getString("email");
+      String? password = prefs.getString("password");
+
+      var connectivityResult = await Connectivity().checkConnectivity();
+
+      if(connectivityResult[0].name == ConnectivityResult.none.name){
+        showCustomSnackBar("Check your internet connection..", title: "Error");
+      }
+      else {
+        // if (buttonState == ButtonState.idle) {
+        //   startLoading();
+        // }
+        var authController = Get.find<LoginController>();
+        authController.login(
+          email ?? "",
+          password ?? "",
+        ).then((response) async {
+          if (response.status == true) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            // AppConstants.SIGNUP_TOKEN = response.data!.userId!;
+            prefs.remove("user_id");
+            prefs.setString("user_id", response.data!.userId!);
+            // prefs.setString("email", _emailController.text.toString());
+            // prefs.setString("password", _passwordController.text.toString());
+            // stopLoading();
+            Get.offNamed(RouteHelper.getDashboardScreen());
+          } else {
+            // stopLoading();
+            showCustomSnackBar(response.message.toString(), title: "Error");
+          }
+        });
+      }
+
+      Get.offNamed(RouteHelper.getDashboardScreen());
+    } else {
+      print("Authentication failed");
+      showCustomSnackBar("Authentication failed", title: "Error");
+    }
+  }
+  Future<void> checkStoredCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString("email");
+    String? password = prefs.getString("password");
+
+    if (email != null && email.isNotEmpty && password != null && password.isNotEmpty) {
+      setState(() {
+        showFingerprint = true;
+      });
+    }
+  }
   @override
   void initState() {
     super.initState();
+
+    checkStoredCredentials();
+
     Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {
         _opacity = 1.0;
@@ -246,6 +323,15 @@ class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderSta
                                       AppConstants.SIGNUP_TOKEN = response.data!.userId!;
                                       prefs.remove("user_id");
                                       prefs.setString("user_id", response.data!.userId!);
+
+                                      if(_emailController.text.isNotEmpty && _emailController.text != null){
+                                        prefs.setString("email", _emailController.text.toString());
+                                        prefs.setString("password", _passwordController.text.toString());
+                                      }else{
+                                        prefs.setString("email", prefs.getString("email") ?? "");
+                                        prefs.setString("password", prefs.getString("password") ?? "");
+                                      }
+
                                       stopLoading();
                                       Get.offNamed(RouteHelper.getDashboardScreen());
                                     } else {
@@ -256,10 +342,24 @@ class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderSta
                                 }
                               },
                             ),
+
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(height: 50,),
+                    showFingerprint
+                        ? GestureDetector(
+                      onTap: authenticate, // Call the function when tapped
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/finger_print.png',
+                          height: 55,
+                        ),
+                      ),
                     )
+                        : SizedBox.shrink(),
+
                   ],
                 ),
               ),

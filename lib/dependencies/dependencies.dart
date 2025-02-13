@@ -43,6 +43,7 @@ Future<void> init() async {
   Get.lazyPut(() => GetProjectScreenRepo(apiClient: Get.find()));
   Get.lazyPut(() => AddQuickSupportRepo(apiClient: Get.find()));
   Get.lazyPut(() => AddSupportTicketsRepo(apiClient: Get.find()));
+  Get.lazyPut(() => GetNotificationRepo(apiClient: Get.find()));
 
 
 //    ---------------------------------------------------------
@@ -60,6 +61,7 @@ Future<void> init() async {
   Get.lazyPut(() => GetProjectCategoryController(repo: Get.find()));
   Get.lazyPut(() => AddQuickSupportController(repo: Get.find()));
   Get.lazyPut(() => AddTicketsController(repo: Get.find()));
+  Get.lazyPut(() => GetNotificationController(repo: Get.find()));
 
 
 }

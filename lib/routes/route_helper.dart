@@ -2,6 +2,7 @@ import 'package:avengers_app/uiscreen/add_quick_support_tickets.dart';
 import 'package:avengers_app/uiscreen/dashboard_screen.dart';
 import 'package:avengers_app/uiscreen/detaile_screen.dart';
 import 'package:avengers_app/uiscreen/login_screen.dart';
+import 'package:avengers_app/uiscreen/notification_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import '../uiscreen/splash_screen.dart';
@@ -16,6 +17,7 @@ class RouteHelper {
   static const String addSupportTicketScreen = "/add-support-ticket-page";
   static const String supportTicketFormScreen = "/support-ticket-form-page";
   static const String detailScreen = "/detail-page";
+  static const String notificationScreen = "/notification-page";
 
 
   ///Getter of file path
@@ -25,6 +27,7 @@ class RouteHelper {
   static String getAddSupportTicketsScreen() => addSupportTicketScreen;
   static String getSupportTicketsFormScreen() => supportTicketFormScreen;
   static String getDetailScreen() => detailScreen;
+  static String getNotificationScreen() => notificationScreen;
 
 
 
@@ -36,6 +39,7 @@ class RouteHelper {
     GetPage(name: addSupportTicketScreen, page: () => AddQuickSupportTicketsScreen()),
     GetPage(name: supportTicketFormScreen, page: () => SupportTicketFormScreen()),
     GetPage(name: detailScreen, page: () => DetailScreen()),
+    GetPage(name: notificationScreen, page: () => NotificationScreen()),
 
   ];
 }

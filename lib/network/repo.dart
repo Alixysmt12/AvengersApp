@@ -150,3 +150,17 @@ class AddSupportTicketsRepo {
   }
 }
 
+class GetNotificationRepo {
+  late final ApiClient apiClient;
+
+  GetNotificationRepo({required this.apiClient});
+
+  Future<Response> getNotification(String action, String sid) async {
+    print("end url: $action");
+    return await apiClient.dashboard({
+      "action": action,
+      "sid": sid,
+    });
+  }
+}
+

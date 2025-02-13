@@ -8,8 +8,8 @@ class AppConstants {
   static String SIGNUP_TOKEN = "";
 
   ///BASE URL
-  static const String BASE_URL = "http://avengers.pk/mobileservices/mobileservices.php";
-  // static const String BASE_URL = "http://uat.avengers.pk/mobileservices/mobileservices.php";
+  // static const String BASE_URL = "http://avengers.pk/mobileservices/mobileservices.php";
+    static const String BASE_URL = "http://uat.avengers.pk/mobileservices/mobileservices.php";
 
   ///Ends Points URL Actions
   static const String LOGIN_URL = "login";
@@ -21,4 +21,5 @@ class AppConstants {
   static const String PROJECT_CATEGORY = "get_project_category";
   static const String ADD_QUICK_SUPPORT = "add_quick_ticket";
   static const String ADD_TICKETS = "add_ticket";
+  static const String NOTIFICATION = "notifications";
 }

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:nice_loading_button/nice_loading_button.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../network/controller.dart';
 import '../routes/route_helper.dart';
+import '../utils/clearing_shared_preference.dart';
 import '../widgets/custom_app_bar_widget.dart';
 import '../widgets/edit_text_widget.dart';
 import '../widgets/new_spinner_widget.dart';
@@ -53,11 +56,26 @@ class _AddQuickSupportTicketsScreenState
           },
           onNotificationPressed: () {
             // Handle notification icon press
-            print('Notification pressed');
+            Get.toNamed(RouteHelper.getNotificationScreen());
           },
           onLogoutPressed: () {
             // Handle logout icon press
-            print('Logout pressed');
+            QuickAlert.show(
+              confirmBtnText: "Yes, Logout!",
+              context: context,
+              type: QuickAlertType.error,
+              title: 'Are You Sure?',
+              text: 'You will be logged out of the system!',
+              onConfirmBtnTap: () {
+                clearSharedPreferences();
+                Get.offNamed(RouteHelper.getLoginScreen());
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  RouteHelper.getLoginScreen(),
+                      (Route<dynamic> route) => false,
+                );
+              },
+            );
           },
           titleText: 'Quick Support Ticket \n Form',
         ),
@@ -93,6 +111,7 @@ class _AddQuickSupportTicketsScreenState
                           onChanged: (ModuleName? value) {
                             setState(() {
                               selectedValueModule = value?.string ?? "";
+                              selectedModuleId = value?.string ?? "";
                             });
                           },
 
@@ -212,7 +231,7 @@ class _AddQuickSupportTicketsScreenState
                             bottom: MediaQuery.of(context).size.height * 0.2),
                         child: Center(
                           child: Container(
-                            child: SpinKitSquareCircle(
+                            child: SpinKitSpinningLines(
                               color: ColorConstants.accentColor,
                               size: 50.0,
                             ),

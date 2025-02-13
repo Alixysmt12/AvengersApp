@@ -9,6 +9,7 @@ import '../models/dashboard_response.dart';
 import '../models/login_response.dart';
 import '../models/lovs_response.dart';
 import '../models/module_response.dart';
+import '../models/notification_response.dart';
 import '../models/project_category_response.dart';
 import '../models/project_wise_listing.dart';
 import '../uiscreen/no_connectivity_screen.dart';
@@ -511,6 +512,67 @@ class AddTicketsController extends GetxController implements GetxService {
     _isLoading = false;
     update();
     return responseModel;
+  }
+}
+
+///get Notification
+class GetNotificationController extends GetxController implements GetxService {
+  final GetNotificationRepo repo;
+
+  GetNotificationController({required this.repo});
+
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  List<NotificationResponse> _list = [];
+
+  List<NotificationResponse> get getList => _list;
+
+  // Method to reset the state
+  void resetState() {
+    _isLoading = false;
+    _list = [];
+    update(); // Update the state
+  }
+
+  Future<void> getData(String sid) async {
+    Response response = await repo.getNotification(AppConstants.NOTIFICATION,sid);
+    update();
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = response.body;
+      if(response.body["status"] == true){
+
+        final dynamic data = responseBody["data"];
+        List<NotificationData>? dataList;
+        if (data != null) {
+          if (data is List) {
+            dataList = data.map((item) => NotificationData.fromJson(item)).toList();
+          } else {
+            dataList = [NotificationData.fromJson(data)];
+          }
+        }
+        final NotificationResponse responseModel = NotificationResponse(
+          data: dataList,
+          status: responseBody["status"],
+          message: responseBody["message"],
+        );
+        _list = [];
+        _list.add(responseModel);
+        _isLoading = true;
+      }else{
+        _isLoading = true;
+        _list = [];
+      }
+    }else{
+      _isLoading = true;
+      _list = [];
+    }
+
+    _isLoading = true;
+    update();
+
   }
 }
 

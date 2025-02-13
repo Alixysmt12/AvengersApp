@@ -52,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               labelStyle: TextStyle(fontSize: 16.0),
               onTap: () {
                 // Handle 'Add Quick Support Ticket' tap
-                // Get.toNamed(RouteHelper.getAddSupportTicketsScreen());
+                Get.toNamed(RouteHelper.getAddSupportTicketsScreen());
                 // Navigate or perform desired action
               },
             ),
@@ -63,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               labelStyle: TextStyle(fontSize: 16.0),
               onTap: () {
                 // Handle 'Add Support Ticket' tap
-                // Get.toNamed(RouteHelper.getSupportTicketsFormScreen());
+                Get.toNamed(RouteHelper.getSupportTicketsFormScreen());
                 // Navigate or perform desired action
               },
             ),
@@ -140,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                                             height: 40,
                                           ),
                                           onPressed: () {
-
+                                            Get.toNamed(RouteHelper.getNotificationScreen());
                                           },
                                         ),
                                         IconButton(

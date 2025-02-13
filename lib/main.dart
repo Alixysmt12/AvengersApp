@@ -1,15 +1,18 @@
 import 'package:avengers_app/routes/route_helper.dart';
 import 'package:avengers_app/theme/app_theme.dart';
 import 'package:avengers_app/theme/theme_controller.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dependencies/dependencies.dart' as dep;
+import 'fcm/firebase_api.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dep.init();
-
+  // await Firebase.initializeApp();
+  // await FirebaseApi().initNotifications();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userId = prefs.getString("user_id");
 

@@ -1,16 +1,20 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nice_loading_button/nice_loading_button.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../network/controller.dart';
 import '../routes/route_helper.dart';
 import '../theme/color_constants.dart';
+import '../utils/clearing_shared_preference.dart';
 import '../widgets/custom_app_bar_widget.dart';
 import '../widgets/edit_text_widget.dart';
 import '../widgets/new_spinner_widget.dart';
@@ -56,8 +60,10 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
   String selectedValueComplaintChannel = "Select";
   String selectedComplaintChannelId = "";
 
-  // final picker = ImagePicker();
+  final picker = ImagePicker();
   List<File> selectedImages = [];
+  List<String> sellImagesProfile = [];
+
 
   String? userId;
   @override
@@ -78,11 +84,26 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
           },
           onNotificationPressed: () {
             // Handle notification icon press
-            print('Notification pressed');
+            Get.toNamed(RouteHelper.getNotificationScreen());
           },
           onLogoutPressed: () {
             // Handle logout icon press
-            print('Logout pressed');
+            QuickAlert.show(
+              confirmBtnText: "Yes, Logout!",
+              context: context,
+              type: QuickAlertType.error,
+              title: 'Are You Sure?',
+              text: 'You will be logged out of the system!',
+              onConfirmBtnTap: () {
+                clearSharedPreferences();
+                Get.offNamed(RouteHelper.getLoginScreen());
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  RouteHelper.getLoginScreen(),
+                      (Route<dynamic> route) => false,
+                );
+              },
+            );
           }, titleText: 'Support Ticket \n Form',
         ),
         body: SingleChildScrollView(
@@ -148,6 +169,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                       onChanged: (ComplaintChannel? value) {
                         setState(() {
                           selectedValueComplaintChannel = value?.string ?? "";
+                          selectedComplaintChannelId = value?.string ?? "";
                         });
                       },
 
@@ -175,6 +197,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                       onChanged: (Interface? value) {
                         setState(() {
                           selectedValueInterface = value?.string ?? "";
+                          selectedInterfaceId = value?.string ?? "";
                         });
                       },
 
@@ -217,9 +240,16 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                         color: ColorConstants.primaryColor,fontWeight: FontWeight.bold
                       ),
                     ),
+                    SizedBox(height: 5,),
                     GestureDetector(
                       onTap: () {
-                        // getImages();
+
+                        if(selectedImages.length < 2){
+                          getImages();
+                        }else{
+                          showCustomSnackBar("You can only select 2 images.");
+                        }
+
                       },
                       child: Icon(
                         Icons.add_box,
@@ -227,6 +257,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                         size: 52,
                       ),
                     ),
+                    SizedBox(height: 5,),
                     SizedBox(
                       width: 300.0,
                       child: selectedImages.isEmpty
@@ -297,9 +328,21 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
 
                             }
                             else{
+
+                              String image1 = sellImagesProfile.isNotEmpty ? sellImagesProfile[0] : "";
+                              String image2 = sellImagesProfile.length > 1 ? sellImagesProfile[1] : "";
+
+
                               if (buttonState == ButtonState.idle) {
                                 startLoading();
                               }
+
+                              if (selectedImages.isNotEmpty) {
+                                {
+                                  convertImagesToBase64Profile(selectedImages);
+                                }
+                              }
+
                               var authController = Get.find<AddTicketsController>();
                               authController
                                   .addQuickSupport(
@@ -313,8 +356,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                                   _ticketsDetailController.text.toString(),
                                 selectedTicketCatId,
                                 "yes",
-                                "",""
-
+                                  image1,image2
                               )
                                   .then((response) async {
                                 if (response.status == true) {
@@ -343,7 +385,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                         MediaQuery.of(context).size.height * 0.2),
                     child: Center(
                       child: Container(
-                        child: SpinKitSquareCircle(
+                        child: SpinKitSpinningLines(
                           color: ColorConstants.accentColor,
                           size: 50.0,
                         ),
@@ -468,24 +510,39 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
   bool checkSelection(String select) {
     return select.toLowerCase() == "select";
   }
-  // Future getImages() async {
-  //   final pickedFile = await picker.pickMultiImage(
-  //       imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
-  //   List<XFile> xfilePick = pickedFile;
-  //
-  //   setState(
-  //         () {
-  //       if (xfilePick.isNotEmpty) {
-  //         for (var i = 0; i < xfilePick.length; i++) {
-  //           selectedImages.add(File(xfilePick[i].path));
-  //         }
-  //       } else {
-  //         ScaffoldMessenger.of(context)
-  //             .showSnackBar(const SnackBar(content: Text('')));
-  //       }
-  //     },
-  //   );
-  // }
+  Future<void> getImages() async {
+    var status = await Permission.photos.request();
+    if (status.isGranted) {
+      final pickedFile = await picker.pickMultiImage(
+          imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
+      if (pickedFile != null && pickedFile.isNotEmpty) {
+        setState(() {
+          selectedImages.addAll(pickedFile.map((xfile) => File(xfile.path)));
+        });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('No images selected.')));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Permission denied to access photos.')));
+    }
+  }
+
+
+  void convertImagesToBase64Profile(List<File> imageFiles) {
+    sellImagesProfile.clear(); // Clear previous images if any
+
+    imageFiles.forEach((imageFile) {
+      try {
+        List<int> imageBytes = imageFile.readAsBytesSync();
+        String base64Image = "data:image/png;base64,${base64Encode(imageBytes)}";
+        sellImagesProfile.add(base64Image);
+      } catch (e) {
+        print('Error: $e');
+      }
+    });
+  }
 }
 class ProjectName {
   final String id;
