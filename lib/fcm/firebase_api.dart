@@ -25,8 +25,31 @@ class FirebaseApi {
 
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
-    Get.offNamed(RouteHelper.getNotificationScreen());
+
+    print("Full FCM Message: ${message.toString()}"); // Prints full FCM message
+    print("Message Data: ${message.data}"); // Prints only data payload
+
+    String? screen = message.data["screen"];
+    print("Extracted Screen: $screen"); // Prints extracted screen name
+
+    if (screen == null || screen.isEmpty) {
+      print("Error: Screen key is missing in FCM payload");
+      Get.offNamed(RouteHelper.getNotificationScreen()); // Default fallback
+      return;
+    }
+
+    if (Get.isRegistered<GetMaterialApp>()) {
+      print("Navigating to: $screen");
+      Get.offNamed(screen);
+    } else {
+      print("GetX not initialized yet, delaying navigation...");
+      Future.delayed(Duration(seconds: 1), () {
+        print("Now navigating to: $screen");
+        Get.offNamed(screen);
+      });
+    }
   }
+
 
   Future initPushNotifications() async {
     await FirebaseMessaging.instance
@@ -35,8 +58,7 @@ class FirebaseApi {
 
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    FirebaseMessaging.onBackgroundMessage(
-        handleBackgroundMessage); // Ensure this is a top-level function
+
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
@@ -47,13 +69,18 @@ class FirebaseApi {
         notification.body,
         NotificationDetails(
           android: AndroidNotificationDetails(
-              _androidChannel.id, _androidChannel.name,
-              channelDescription: _androidChannel.description,
-              icon: "drawable/ic_launcher"),
+            _androidChannel.id,
+            _androidChannel.name,
+            channelDescription: _androidChannel.description,
+            importance: Importance.high, // Ensure notifications appear in foreground
+            priority: Priority.high, // Immediate notification appearance
+            icon: "@mipmap/ic_launcher", //Use correct icon
+          ),
         ),
         payload: jsonEncode(message.toMap()),
       );
     });
+
   }
 
   Future<void> initLocalNotifications() async {
@@ -80,19 +107,29 @@ class FirebaseApi {
   }
 
   Future<void> initNotifications() async {
-    await _firebaseMessaging.requestPermission();
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      print("Notifications permission denied!");
+      return;
+    }
+
     try {
       final fCMToken = await _firebaseMessaging.getToken();
       print("Token: $fCMToken");
       await initPushNotifications();
       await initLocalNotifications();
-
-      if (fCMToken != null) {
-        // await Get.find<FCMController>().fcmToken(fCMToken);
-      }
     } catch (e) {
-      print(e.toString());
+      print("FCM Init Error: ${e.toString()}");
     }
-
   }
+
 }
