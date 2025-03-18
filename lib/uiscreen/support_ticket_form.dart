@@ -104,7 +104,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                 );
               },
             );
-          }, titleText: 'Support Ticket \n Form',
+          }, titleText: 'Add Support \n Ticket',
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -132,7 +132,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                     ),
                     MyCustomDropdownWidget<ModuleName>(
                       isError: moduleCheck,
-                      title: 'Module*',
+                      title: 'Module',
                       items: dropDownModule,
                       selectedItem: dropDownModule.isNotEmpty ? dropDownModule.first : null,
                       itemToString: (ModuleName year) => year.string,
@@ -147,7 +147,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                     ),
                     MyCustomDropdownWidget<ScreenName>(
                       isError: screenCheck,
-                      title: 'Screen Name*',
+                      title: 'Screen Name',
                       items: dropDownScreen,
                       selectedItem: dropDownScreen.isNotEmpty ? dropDownScreen.first : null,
                       itemToString: (ScreenName year) => year.string,
@@ -162,7 +162,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                     ),
                     MyCustomDropdownWidget<ComplaintChannel>(
                       isError: complaintChannelCheck,
-                      title: 'Complaint channel*',
+                      title: 'Complaint channel',
                       items: dropDownComplaintChannel,
                       selectedItem: dropDownComplaintChannel.isNotEmpty ? dropDownComplaintChannel.first : null,
                       itemToString: (ComplaintChannel year) => year.string,
@@ -176,7 +176,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                     ),
                     MyCustomDropdownWidget<TicketCategory>(
                       isError: ticketCheck,
-                      title: 'Tickets Category*',
+                      title: 'Tickets Category',
                       items: dropDownTicketCat,
                       selectedItem: dropDownTicketCat.isNotEmpty ? dropDownTicketCat.first : null,
                       itemToString: (TicketCategory year) => year.string,
@@ -190,7 +190,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                     ),
                     MyCustomDropdownWidget<Interface>(
                       isError: interfaceCheck,
-                      title: 'Interface*',
+                      title: 'Interface',
                       items: dropDownInterface,
                       selectedItem: dropDownInterface.isNotEmpty ? dropDownInterface.first : null,
                       itemToString: (Interface year) => year.string,
@@ -204,7 +204,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                     ),
                     MyCustomDropdownWidget<UserData>(
                       isError: ticketSummaryCheck,
-                      title: 'User*',
+                      title: 'User',
                       items: dropDownUser,
                       selectedItem: dropDownUser.isNotEmpty ? dropDownUser.first : null,
                       itemToString: (UserData year) => year.string,
@@ -222,12 +222,14 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                       hintText: "Tickets Summary",
                       icon: Icons.mail_outline,
                       isError: ticketSummaryCheck,
+                      maxLength: 255,
                     ),
                     EditTextWidget(
                       controller: _ticketsDetailController,
-                      hintText: "Tickets Details*",
+                      hintText: "Tickets Details",
                       icon: Icons.mail_outline,
                       isError: ticketDetailCheck,
+                      maxLength: 255,
                     ),
 
                     SizedBox(height: 15,),
@@ -312,16 +314,16 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                           ),
                           onTap: (startLoading, stopLoading, buttonState) async {
 
-                            if (_ticketSummaryController.text.isEmpty || _ticketsDetailController.text.isEmpty || selectedProjectId == ""|| selectedModuleId == "" || selectedScreenId == ""|| selectedComplaintChannelId == ""|| selectedTicketCatId == ""|| selectedInterfaceId == ""|| selectedInterfaceId == "") {
+                            if (selectedProjectId == "") {
                               setState(() {
                                 yearCheck = checkSelection(selectedValueProject);
-                                moduleCheck = checkSelection(selectedValueModule);
-                                screenCheck = checkSelection(selectedValueScreen);
-                                complaintChannelCheck = checkSelection(selectedValueComplaintChannel);
-                                ticketCheck = checkSelection(selectedValueTicketCat);
-                                interfaceCheck = checkSelection(selectedValueInterface);
-                                ticketSummaryCheck = _ticketSummaryController.text.isEmpty;
-                                ticketDetailCheck = _ticketsDetailController.text.isEmpty;
+                                // moduleCheck = checkSelection(selectedValueModule);
+                                // screenCheck = checkSelection(selectedValueScreen);
+                                // complaintChannelCheck = checkSelection(selectedValueComplaintChannel);
+                                // ticketCheck = checkSelection(selectedValueTicketCat);
+                                // interfaceCheck = checkSelection(selectedValueInterface);
+                                // ticketSummaryCheck = _ticketSummaryController.text.isEmpty;
+                                // ticketDetailCheck = _ticketsDetailController.text.isEmpty;
                               });
 
                               showCustomSnackBar("Please Fill Required Fields.");
@@ -511,23 +513,41 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
     return select.toLowerCase() == "select";
   }
   Future<void> getImages() async {
-    var status = await Permission.photos.request();
-    if (status.isGranted) {
-      final pickedFile = await picker.pickMultiImage(
-          imageQuality: 100, maxHeight: 1000, maxWidth: 1000);
-      if (pickedFile != null && pickedFile.isNotEmpty) {
-        setState(() {
-          selectedImages.addAll(pickedFile.map((xfile) => File(xfile.path)));
-        });
+    if (Platform.isAndroid) {
+      if (await Permission.photos.isGranted ||
+          await Permission.storage.isGranted ||
+          await Permission.mediaLibrary.isGranted) {
+        pickImages();
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('No images selected.')));
+        var status = await Permission.photos.request();
+        if (status.isGranted) {
+          pickImages();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Permission denied to access photos.')),
+          );
+        }
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Permission denied to access photos.')));
+      pickImages(); // iOS doesn't need the same permission flow
     }
   }
+
+  Future<void> pickImages() async {
+    final pickedFile = await picker.pickMultiImage(
+      imageQuality: 100, maxHeight: 1000, maxWidth: 1000,
+    );
+    if (pickedFile != null && pickedFile.isNotEmpty) {
+      setState(() {
+        selectedImages.addAll(pickedFile.map((xfile) => File(xfile.path)));
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No images selected.')),
+      );
+    }
+  }
+
 
 
   void convertImagesToBase64Profile(List<File> imageFiles) {

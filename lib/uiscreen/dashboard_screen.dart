@@ -70,134 +70,481 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
           ],
         ),
         body: SafeArea(
-          child: GetBuilder<DashboardController>(builder: (dashboardData) {
-            return dashboardData.isLoading
-                ? SizedBox(
-                    width: MediaQuery.of(context)
-                        .size
-                        .width, // Set width to the screen width
-                    height: MediaQuery.of(context).size.height,
-                    child: Center(
-                      child: Container(
-                        child: SpinKitSpinningLines(
-                          color: ColorConstants.accentColor,
-                          size: 50.0,
-                        ),
-                      ),
-                    ),
-                  )
-                : CustomScrollView(
-                    slivers: [
-                      // Fixed part (top row) with "Hello, Tariq Khuwaja"
-                      SliverAppBar(
-                        surfaceTintColor: Colors.white,
-                        expandedHeight: 100.0,
-                        backgroundColor: Colors.white,
-                        floating: false,
-                        pinned: true,
-                        // Keeps the app bar pinned
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              // Aligns content at the bottom
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          dashboardData.getList[0].data!.greetings ?? "",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                color:
-                                                    ColorConstants.textPrimary,
-                                              ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          dashboardData.getList[0].data!.fullname ?? "",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .displayLarge,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: Image.asset(
-                                            'assets/images/notification.png',
-                                            width: 40,
-                                            height: 40,
-                                          ),
-                                          onPressed: () {
-                                            Get.toNamed(RouteHelper.getNotificationScreen());
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: Image.asset(
-                                            'assets/images/logout.png',
-                                            width: 40,
-                                            height: 40,
-                                          ),
-                                          onPressed: () {
-                                            QuickAlert.show(
-                                              confirmBtnText: "Yes, Logout!",
-                                              context: context,
-                                              type: QuickAlertType.error,
-                                              title: 'Are You Sure?',
-                                              text: 'You will be logged out of the system!',
-                                              onConfirmBtnTap: () {
-                                                clearSharedPreferences();
-                                                Get.offNamed(RouteHelper.getLoginScreen());
-                                                Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  RouteHelper.getLoginScreen(),
-                                                      (Route<dynamic> route) => false,
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              getData();
+            },
+            child: GetBuilder<DashboardController>(builder: (dashboardData) {
+              return dashboardData.isLoading
+                  ? SizedBox(
+                      width: MediaQuery.of(context)
+                          .size
+                          .width, // Set width to the screen width
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(
+                        child: Container(
+                          child: SpinKitSpinningLines(
+                            color: ColorConstants.accentColor,
+                            size: 50.0,
                           ),
                         ),
                       ),
-
-                      // Scrollable part starts here
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    // First container (larger)
-                                    Expanded(
-                                      flex: 3,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(
-                                            RouteHelper.getDetailScreen(),
-                                            arguments: {"listing": "pending_at_support"},
-                                          );
-                                        },
+                    )
+                  : CustomScrollView(
+                      slivers: [
+                        // Fixed part (top row) with "Hello, Tariq Khuwaja"
+                        SliverAppBar(
+                          surfaceTintColor: Colors.white,
+                          expandedHeight: 100.0,
+                          backgroundColor: Colors.white,
+                          floating: false,
+                          pinned: true,
+                          // Keeps the app bar pinned
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                // Aligns content at the bottom
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            dashboardData.getList[0].data!.greetings ?? "",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  color:
+                                                      ColorConstants.textPrimary,
+                                                ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            dashboardData.getList[0].data!.fullname ?? "",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayLarge,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: Image.asset(
+                                              'assets/images/notification.png',
+                                              width: 40,
+                                              height: 40,
+                                            ),
+                                            onPressed: () {
+                                              Get.toNamed(RouteHelper.getNotificationScreen());
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: Image.asset(
+                                              'assets/images/logout.png',
+                                              width: 40,
+                                              height: 40,
+                                            ),
+                                            onPressed: () {
+                                              QuickAlert.show(
+                                                confirmBtnText: "Yes, Logout!",
+                                                context: context,
+                                                type: QuickAlertType.error,
+                                                title: 'Are You Sure?',
+                                                text: 'You will be logged out of the system!',
+                                                onConfirmBtnTap: () {
+                                                  clearSharedPreferences();
+                                                  Get.offNamed(RouteHelper.getLoginScreen());
+                                                  Navigator.pushNamedAndRemoveUntil(
+                                                    context,
+                                                    RouteHelper.getLoginScreen(),
+                                                        (Route<dynamic> route) => false,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+            
+                        // Scrollable part starts here
+                        SliverList(
+                          delegate: SliverChildListDelegate([
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      // First container (larger)
+                                      Expanded(
+                                        flex: 3,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Get.toNamed(
+                                              RouteHelper.getDetailScreen(),
+                                              arguments: {"listing": "pending_at_support"},
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  ColorConstants.primaryColor, // First color
+                                                  ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                                ],
+                                                begin: Alignment.bottomCenter, // start at the top center
+                                                end: Alignment.topCenter, // end at the bottom center
+                                              ),
+                                              borderRadius: BorderRadius.circular(19),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(11.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/icon1.png',
+                                                    width: 40,
+                                                    height: 40,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    'Pending at Support',
+                                                    style: Theme.of(context).textTheme.bodyMedium,
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    dashboardData.getList[0].data!.counters?.pendingAtSupport ?? "00",
+                                                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                      color: ColorConstants.textLight,
+                                                      fontSize: 35,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Expanded(
+                                        flex: 2,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Get.toNamed(
+                                              RouteHelper.getDetailScreen(),
+                                              arguments: {"listing": "pending_at_qa"},
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              color: ColorConstants.dashboardColor,
+                                              borderRadius: BorderRadius.circular(19),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(11.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/icon2.png',
+                                                    width: 40,
+                                                    height: 40,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    'Pending at QA',
+                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                      color: ColorConstants.primaryColor,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    dashboardData.getList[0].data!.counters?.pendingAtQa ?? "00",
+                                                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                      color: ColorConstants.primaryColor,
+                                                      fontSize: 35,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+            
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      // Second container (smaller)
+                                      Expanded(
+                                        flex: 2,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Get.toNamed(
+                                              RouteHelper.getDetailScreen(),
+                                              arguments: {"listing": "pending_at_dev"},
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              color: ColorConstants.dashboardColor,
+                                              borderRadius: BorderRadius.circular(19),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(11.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/icon3.png',
+                                                    width: 40,
+                                                    height: 40,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    'Pending at Dev',
+                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                      color: ColorConstants.primaryColor,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    dashboardData.getList[0].data!.counters?.pendingAtDev ?? "00",
+                                                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                      color: ColorConstants.primaryColor,
+                                                      fontSize: 35,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 15),
+                                      // First container (larger)
+                                      Expanded(
+                                        flex: 3,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Get.toNamed(
+                                              RouteHelper.getDetailScreen(),
+                                              arguments: {"listing": "pending_at_powerapp"},
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  ColorConstants.primaryColor, // First color
+                                                  ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                                ],
+                                                begin: Alignment.bottomCenter, // start at the top center
+                                                end: Alignment.topCenter, // end at the bottom center
+                                              ),
+                                              borderRadius: BorderRadius.circular(19),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(11.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/images/icon4.png',
+                                                    width: 40,
+                                                    height: 40,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    'Pending at Power App',
+                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                      color: ColorConstants.textLight, // Adjust text color as needed
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    dashboardData.getList[0].data!.counters?.pendingAtPowerapp ?? "00",
+                                                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                      color: ColorConstants.textLight, // Adjust text color as needed
+                                                      fontSize: 35,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+            
+                                    ],
+                                  ),
+            
+                                  SizedBox(height: 15),
+                                  Text(
+                                    'Tickets Highlights',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: ColorConstants.textPrimary,
+                                        ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(
+                                        RouteHelper.getDetailScreen(),
+                                        arguments: {"listing": "all_open"},
+                                      );
+                                    },
+                                    child: ReusableDashboardTile(
+                                      gradientColors: [
+                                        ColorConstants.dashboardColor2,
+                                        ColorConstants.dashboardColor3
+                                      ],
+                                      iconPath: 'assets/images/icon5.png',
+                                      title: 'All Open',
+                                      count: dashboardData.getList[0].data!
+                                              .ticketHighlights?.allOpen ??
+                                          "00",
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(
+                                        RouteHelper.getDetailScreen(),
+                                        arguments: {"listing": "quick_support"},
+                                      );
+                                    },
+                                    child: ReusableDashboardTile(
+                                      gradientColors: [
+                                        ColorConstants.dashboardColor4,
+                                        ColorConstants.dashboardColor5
+                                      ],
+                                      iconPath: 'assets/images/icon6.png',
+                                      title: 'Quick Support',
+                                      count: dashboardData.getList[0].data!
+                                              .ticketHighlights?.quickSupport ??
+                                          "00",
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(
+                                        RouteHelper.getDetailScreen(),
+                                        arguments: {"listing": "due_today"},
+                                      );
+                                    },
+                                    child: ReusableDashboardTile(
+                                      gradientColors: [
+                                        ColorConstants.dashboardColor6,
+                                        ColorConstants.dashboardColor7
+                                      ],
+                                      iconPath: 'assets/images/icon7.png',
+                                      title: 'Due Today',
+                                      count: dashboardData.getList[0].data!
+                                              .ticketHighlights?.dueToday ??
+                                          "00",
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(
+                                        RouteHelper.getDetailScreen(),
+                                        arguments: {"listing": "timeline_required"},
+                                      );
+                                    },
+                                    child: ReusableDashboardTile(
+                                      gradientColors: [
+                                        ColorConstants.dashboardColor8,
+                                        ColorConstants.dashboardColor9
+                                      ],
+                                      iconPath: 'assets/images/icon7.png',
+                                      title: 'Timeline Required',
+                                      count: dashboardData.getList[0].data!
+                                              .ticketHighlights?.timelineRequired ??
+                                          "00",
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(
+                                        RouteHelper.getDetailScreen(),
+                                        arguments: {"listing": "over_due"},
+                                      );
+                                    },
+                                    child: ReusableDashboardTile(
+                                      gradientColors: [
+                                        ColorConstants.dashboardColor10,
+                                        ColorConstants.dashboardColor11
+                                      ],
+                                      iconPath: 'assets/images/icon8.png',
+                                      title: 'Overdue',
+                                      count: dashboardData.getList[0].data!
+                                              .ticketHighlights?.overDue ??
+                                          "00",
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.toNamed(
+                                        RouteHelper.getDetailScreen(),
+                                        arguments: {"listing": "un_assigned"},
+                                      );
+                                    },
+                                    child: ReusableDashboardTile(
+                                      gradientColors: [
+                                        ColorConstants.dashboardColor2,
+                                        ColorConstants.dashboardColor3
+                                      ],
+                                      iconPath: 'assets/images/icon7.png',
+                                      title: 'Unassigned',
+                                      count: dashboardData.getList[0].data!
+                                              .ticketHighlights?.unAssigned ??
+                                          "00",
+                                    ),
+                                  ),
+            
+                                  SizedBox(height: 15),
+                                  Text(
+                                    'Average Ticket Closure Time',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                      color: ColorConstants.textPrimary,
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Row(
+                                    children: [
+                                      // First container (larger)
+                                      Expanded(
+                                        flex: 3,
                                         child: Container(
                                           height: 150,
                                           decoration: BoxDecoration(
@@ -207,160 +554,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                                                 ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
                                               ],
                                               begin: Alignment.bottomCenter, // start at the top center
-                                              end: Alignment.topCenter, // end at the bottom center
-                                            ),
-                                            borderRadius: BorderRadius.circular(19),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(11.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Image.asset(
-                                                  'assets/images/icon1.png',
-                                                  width: 40,
-                                                  height: 40,
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  'Pending at Support',
-                                                  style: Theme.of(context).textTheme.bodyMedium,
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  dashboardData.getList[0].data!.counters?.pendingAtSupport ?? "00",
-                                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                    color: ColorConstants.textLight,
-                                                    fontSize: 35,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 15),
-                                    Expanded(
-                                      flex: 2,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(
-                                            RouteHelper.getDetailScreen(),
-                                            arguments: {"listing": "pending_at_qa"},
-                                          );
-                                        },
-                                        child: Container(
-                                          height: 150,
-                                          decoration: BoxDecoration(
-                                            color: ColorConstants.dashboardColor,
-                                            borderRadius: BorderRadius.circular(19),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(11.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Image.asset(
-                                                  'assets/images/icon2.png',
-                                                  width: 40,
-                                                  height: 40,
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  'Pending at QA',
-                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    color: ColorConstants.primaryColor,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  dashboardData.getList[0].data!.counters?.pendingAtQa ?? "00",
-                                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                    color: ColorConstants.primaryColor,
-                                                    fontSize: 35,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    // Second container (smaller)
-                                    Expanded(
-                                      flex: 2,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(
-                                            RouteHelper.getDetailScreen(),
-                                            arguments: {"listing": "pending_at_dev"},
-                                          );
-                                        },
-                                        child: Container(
-                                          height: 150,
-                                          decoration: BoxDecoration(
-                                            color: ColorConstants.dashboardColor,
-                                            borderRadius: BorderRadius.circular(19),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(11.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Image.asset(
-                                                  'assets/images/icon3.png',
-                                                  width: 40,
-                                                  height: 40,
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  'Pending at Dev',
-                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    color: ColorConstants.primaryColor,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  dashboardData.getList[0].data!.counters?.pendingAtDev ?? "00",
-                                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                    color: ColorConstants.primaryColor,
-                                                    fontSize: 35,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 15),
-                                    // First container (larger)
-                                    Expanded(
-                                      flex: 3,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(
-                                            RouteHelper.getDetailScreen(),
-                                            arguments: {"listing": "pending_at_powerapp"},
-                                          );
-                                        },
-                                        child: Container(
-                                          height: 150,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                ColorConstants.primaryColor, // First color
-                                                ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
-                                              ],
-                                              begin: Alignment.bottomCenter, // start at the top center
-                                              end: Alignment.topCenter, // end at the bottom center
+                                              end: Alignment.topCenter, // end at the bottom center// End at the bottom-right corner
                                             ),
                                             borderRadius: BorderRadius.circular(19),
                                           ),
@@ -376,16 +570,16 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                                                 ),
                                                 SizedBox(height: 8),
                                                 Text(
-                                                  'Pending at Power App',
+                                                  'Power-App',
                                                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                    color: ColorConstants.textLight, // Adjust text color as needed
+                                                    color: ColorConstants.textLight, // You can adjust the text color
                                                   ),
                                                 ),
                                                 SizedBox(height: 4),
                                                 Text(
-                                                  dashboardData.getList[0].data!.counters?.pendingAtPowerapp ?? "00",
+                                                  dashboardData.getList[0].data!.averageTicketClosureTime?.powerApp ?? "00",
                                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                    color: ColorConstants.textLight, // Adjust text color as needed
+                                                    color: ColorConstants.textLight, // You can adjust the text color
                                                     fontSize: 35,
                                                   ),
                                                 ),
@@ -394,325 +588,136 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
                                           ),
                                         ),
                                       ),
-                                    ),
-
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-                                Text(
-                                  'Tickets Highlights',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: ColorConstants.textPrimary,
-                                      ),
-                                ),
-                                SizedBox(height: 10),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "all_open"},
-                                    );
-                                  },
-                                  child: ReusableDashboardTile(
-                                    gradientColors: [
-                                      ColorConstants.dashboardColor2,
-                                      ColorConstants.dashboardColor3
-                                    ],
-                                    iconPath: 'assets/images/icon5.png',
-                                    title: 'All Open',
-                                    count: dashboardData.getList[0].data!
-                                            .ticketHighlights?.allOpen ??
-                                        "00",
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "quick_support"},
-                                    );
-                                  },
-                                  child: ReusableDashboardTile(
-                                    gradientColors: [
-                                      ColorConstants.dashboardColor4,
-                                      ColorConstants.dashboardColor5
-                                    ],
-                                    iconPath: 'assets/images/icon6.png',
-                                    title: 'Quick Support',
-                                    count: dashboardData.getList[0].data!
-                                            .ticketHighlights?.quickSupport ??
-                                        "00",
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "due_today"},
-                                    );
-                                  },
-                                  child: ReusableDashboardTile(
-                                    gradientColors: [
-                                      ColorConstants.dashboardColor6,
-                                      ColorConstants.dashboardColor7
-                                    ],
-                                    iconPath: 'assets/images/icon7.png',
-                                    title: 'Due Today',
-                                    count: dashboardData.getList[0].data!
-                                            .ticketHighlights?.dueToday ??
-                                        "00",
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "timeline_required"},
-                                    );
-                                  },
-                                  child: ReusableDashboardTile(
-                                    gradientColors: [
-                                      ColorConstants.dashboardColor8,
-                                      ColorConstants.dashboardColor9
-                                    ],
-                                    iconPath: 'assets/images/icon7.png',
-                                    title: 'Timeline Required',
-                                    count: dashboardData.getList[0].data!
-                                            .ticketHighlights?.timelineRequired ??
-                                        "00",
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "over_due"},
-                                    );
-                                  },
-                                  child: ReusableDashboardTile(
-                                    gradientColors: [
-                                      ColorConstants.dashboardColor10,
-                                      ColorConstants.dashboardColor11
-                                    ],
-                                    iconPath: 'assets/images/icon8.png',
-                                    title: 'Overdue',
-                                    count: dashboardData.getList[0].data!
-                                            .ticketHighlights?.overDue ??
-                                        "00",
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      RouteHelper.getDetailScreen(),
-                                      arguments: {"listing": "un_assigned"},
-                                    );
-                                  },
-                                  child: ReusableDashboardTile(
-                                    gradientColors: [
-                                      ColorConstants.dashboardColor2,
-                                      ColorConstants.dashboardColor3
-                                    ],
-                                    iconPath: 'assets/images/icon7.png',
-                                    title: 'Un Assign',
-                                    count: dashboardData.getList[0].data!
-                                            .ticketHighlights?.unAssigned ??
-                                        "00",
-                                  ),
-                                ),
-
-                                SizedBox(height: 15),
-                                Text(
-                                  'Average Ticket Closure Time',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                    color: ColorConstants.textPrimary,
-                                  ),
-                                ),
-                                SizedBox(height: 15),
-                                Row(
-                                  children: [
-                                    // First container (larger)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              ColorConstants.primaryColor, // First color
-                                              ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
-                                            ],
-                                            begin: Alignment.bottomCenter, // start at the top center
-                                            end: Alignment.topCenter, // end at the bottom center// End at the bottom-right corner
+            
+                                      SizedBox(width: 15),
+                                      // Second container (smaller)
+                                      Expanded(
+                                        flex: 3,
+                                        child: Container(
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                ColorConstants.primaryColor, // First color
+                                                ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
+                                              ],
+                                              begin: Alignment.bottomCenter, // start at the top center
+                                              end: Alignment.topCenter, // end at the bottom center
+                                            ),
+                                            borderRadius: BorderRadius.circular(19),
                                           ),
-                                          borderRadius: BorderRadius.circular(19),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(11.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/icon4.png',
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                'Power-App',
-                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                  color: ColorConstants.textLight, // You can adjust the text color
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(11.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Image.asset(
+                                                  'assets/images/icon11.png',
+                                                  width: 40,
+                                                  height: 40,
                                                 ),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                dashboardData.getList[0].data!.averageTicketClosureTime?.powerApp ?? "00",
-                                                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                  color: ColorConstants.textLight, // You can adjust the text color
-                                                  fontSize: 35,
+                                                SizedBox(height: 8),
+                                                Text(
+                                                  'Non Power-App',
+                                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                    color: ColorConstants.textLight, // You can adjust the text color as needed
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  dashboardData.getList[0].data!.averageTicketClosureTime?.nonPowerApp ?? "00",
+                                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                                    color: ColorConstants.textLight, // You can adjust the text color as needed
+                                                    fontSize: 35,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-
-                                    SizedBox(width: 15),
-                                    // Second container (smaller)
-                                    Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              ColorConstants.primaryColor, // First color
-                                              ColorConstants.primaryDarkColor, // Second color (you can replace this with any other color)
-                                            ],
-                                            begin: Alignment.bottomCenter, // start at the top center
-                                            end: Alignment.topCenter, // end at the bottom center
-                                          ),
-                                          borderRadius: BorderRadius.circular(19),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(11.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Image.asset(
-                                                'assets/images/icon11.png',
-                                                width: 40,
-                                                height: 40,
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                'Non Power-App',
-                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                  color: ColorConstants.textLight, // You can adjust the text color as needed
-                                                ),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                dashboardData.getList[0].data!.averageTicketClosureTime?.nonPowerApp ?? "00",
-                                                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                                                  color: ColorConstants.textLight, // You can adjust the text color as needed
-                                                  fontSize: 35,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-                                Text(
-                                  'Tickets Close Ratio [UHF Side]',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        color: ColorConstants.textPrimary,
-                                      ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CircularProgressBarWithLabel(
-                                          progress: double.tryParse(dashboardData
-                                              .getList[0]
-                                              .data!
-                                              .ticketClosureRatioUHF
-                                              ?.mtd ?? "0") ?? 0.0),
-                                    ),
-                                    SizedBox(width: 15),
-                                    Expanded(
-                                      child: CircularProgressBarWithLabel2(
-                                          progress: double.tryParse(dashboardData
-                                              .getList[0]
-                                              .data!
-                                              .ticketClosureRatioUHF
-                                              ?.ytd ?? "0") ?? 0.0),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(height: 15),
-                                Text(
-                                  'Tickets Close Ratio [Client Side] ',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                    color: ColorConstants.textPrimary,
+            
+                                    ],
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: CircularProgressBarWithLabel(
-                                          progress: double.tryParse(dashboardData
-                                              .getList[0]
-                                              .data!
-                                              .ticketClosureRatio
-                                              ?.mtd ?? "0") ?? 0.0),
+            
+                                  SizedBox(height: 15),
+                                  Text(
+                                    'Tickets Close Ratio [UHF Side]',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: ColorConstants.textPrimary,
+                                        ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CircularProgressBarWithLabel(
+                                            progress: double.tryParse(dashboardData
+                                                .getList[0]
+                                                .data!
+                                                .ticketClosureRatioUHF
+                                                ?.mtd ?? "0") ?? 0.0),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Expanded(
+                                        child: CircularProgressBarWithLabel2(
+                                            progress: double.tryParse(dashboardData
+                                                .getList[0]
+                                                .data!
+                                                .ticketClosureRatioUHF
+                                                ?.ytd ?? "0") ?? 0.0),
+                                      ),
+                                    ],
+                                  ),
+            
+                                  SizedBox(height: 15),
+                                  Text(
+                                    'Tickets Close Ratio [Client Side] ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                      color: ColorConstants.textPrimary,
                                     ),
-                                    SizedBox(width: 15),
-                                    Expanded(
-                                      child: CircularProgressBarWithLabel2(
-                                          progress: double.tryParse(dashboardData
-                                              .getList[0]
-                                              .data!
-                                              .ticketClosureRatio
-                                              ?.ytd ?? "0") ?? 0.0),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CircularProgressBarWithLabel(
+                                            progress: double.tryParse(dashboardData
+                                                .getList[0]
+                                                .data!
+                                                .ticketClosureRatio
+                                                ?.mtd ?? "0") ?? 0.0),
+                                      ),
+                                      SizedBox(width: 15),
+                                      Expanded(
+                                        child: CircularProgressBarWithLabel2(
+                                            progress: double.tryParse(dashboardData
+                                                .getList[0]
+                                                .data!
+                                                .ticketClosureRatio
+                                                ?.ytd ?? "0") ?? 0.0),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ]),
-                      ),
-                    ],
-                  );
-          }),
+                          ]),
+                        ),
+                      ],
+                    );
+            }),
+          ),
         ),
       ),
     );

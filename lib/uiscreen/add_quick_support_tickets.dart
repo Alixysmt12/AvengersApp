@@ -104,7 +104,7 @@ class _AddQuickSupportTicketsScreenState
                         ),
                         MyCustomDropdownWidget<ModuleName>(
                           isError: moduleCheck,
-                          title: 'Category*',
+                          title: 'Template*',
                           items: dropDownModule,
                           selectedItem: dropDownModule.isNotEmpty ? dropDownModule.first : null,
                           itemToString: (ModuleName year) => year.string,
@@ -128,6 +128,7 @@ class _AddQuickSupportTicketsScreenState
                           hintText: "Issue Details*",
                           icon: Icons.mail_outline,
                           isError: issueDetailCheck,
+                          maxLength: 255,
                         ),
                         SizedBox(
                           height: 50,
