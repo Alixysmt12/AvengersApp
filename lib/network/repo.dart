@@ -129,13 +129,14 @@ class AddSupportTicketsRepo {
 
   AddSupportTicketsRepo({required this.apiClient});
 
-  Future<Response> addTickets(String action, String sid,String projectId,String complaintchannel,String issueType,String interface
+  Future<Response> addTickets(String action, String sid,String projectId,String complaintchannel,String screen,String issueType,String interface
       ,String module,String summary,String details,String issueCategory,String isSupport,String fileupload1,String fileupload2) async {
     print("end url: $action");
     return await apiClient.dashboard({
       "action": action,
       "sid": sid,
       "projectId": projectId,
+      "screen": screen,
       "complaintchannel":complaintchannel,
       "issueType": issueType,
       "interface": interface,

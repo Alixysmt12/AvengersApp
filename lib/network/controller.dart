@@ -481,11 +481,11 @@ class AddTicketsController extends GetxController implements GetxService {
 
   bool get isLoading => _isLoading;
 
-  Future<LoginResponse> addQuickSupport( String sid,String projectId,String complaintchannel,String issueType,String interface
+  Future<LoginResponse> addQuickSupport( String sid,String projectId,String complaintchannel,String screen,String issueType,String interface
       ,String module,String summary,String details,String issueCategory,String isSupport,String fileupload1,String fileupload2) async {
     _isLoading = true;
     update();
-    Response response = await repo.addTickets(AppConstants.ADD_TICKETS, sid, projectId, complaintchannel,issueType,interface,module,summary,details,issueCategory,isSupport,fileupload1,fileupload2);
+    Response response = await repo.addTickets(AppConstants.ADD_TICKETS, sid, projectId, complaintchannel,screen,issueType,interface,module,summary,details,issueCategory,isSupport,fileupload1,fileupload2);
 
     late LoginResponse responseModel;
 

@@ -351,6 +351,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                                 userId ?? "",
                                 selectedProjectId,
                                 selectedComplaintChannelId,
+                                selectedValueScreen,
                                 selectedTicketCatId,
                                 selectedInterfaceId,
                                 selectedModuleId,

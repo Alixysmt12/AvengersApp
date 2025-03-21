@@ -29,10 +29,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 
-  await Firebase.initializeApp();  // ✅ Initialize Firebase first
+  await Firebase.initializeApp();  // Initialize Firebase first
   await dep.init();
 
-  await requestNotificationPermission();  // ✅ Now it's safe to call this
+  await requestNotificationPermission();  //Now it's safe to call this
   await FirebaseApi().initNotifications();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
