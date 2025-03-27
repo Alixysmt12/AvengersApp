@@ -49,7 +49,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
   String selectedProjectId = "";
   String selectedValueModule = "Select";
   String selectedModuleId = "";
-  String selectedValueScreen = "Select";
+  String selectedValueScreen = "";
   String selectedScreenId = "";
   String selectedValueTicketCat = "Select";
   String selectedTicketCatId = "";
@@ -331,8 +331,8 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                             }
                             else{
 
-                              String image1 = sellImagesProfile.isNotEmpty ? sellImagesProfile[0] : "";
-                              String image2 = sellImagesProfile.length > 1 ? sellImagesProfile[1] : "";
+                              // String image1 = sellImagesProfile.isNotEmpty ? sellImagesProfile[0] : "";
+                              // String image2 = sellImagesProfile.length > 1 ? sellImagesProfile[1] : "";
 
 
                               if (buttonState == ButtonState.idle) {
@@ -359,7 +359,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                                   _ticketsDetailController.text.toString(),
                                 selectedTicketCatId,
                                 "yes",
-                                  image1,image2
+                                  sellImagesProfile.isNotEmpty ? sellImagesProfile[0] : "",sellImagesProfile.length > 1 ? sellImagesProfile[1] : ""
                               )
                                   .then((response) async {
                                 if (response.status == true) {
