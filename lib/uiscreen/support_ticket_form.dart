@@ -352,13 +352,14 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
                                 selectedProjectId,
                                 selectedComplaintChannelId,
                                 selectedValueScreen,
-                                selectedTicketCatId,
+                                  selectedValueTicketCat,
                                 selectedInterfaceId,
                                 selectedModuleId,
                                 _ticketSummaryController.text.toString(),
                                   _ticketsDetailController.text.toString(),
-                                selectedTicketCatId,
+                                  selectedValueTicketCat,
                                 "yes",
+                                  selectedUserId,
                                   sellImagesProfile.isNotEmpty ? sellImagesProfile[0] : "",sellImagesProfile.length > 1 ? sellImagesProfile[1] : ""
                               )
                                   .then((response) async {
