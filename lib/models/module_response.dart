@@ -11,15 +11,15 @@ class GetModuleResponse {
     if (json['data'] != null) {
       data = <ModuleData>[];
       json['data'].forEach((v) {
-        data!.add(new ModuleData.fromJson(v));
+        data!.add(ModuleData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -39,9 +39,9 @@ class ModuleData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['record_id'] = this.recordId;
-    data['module_name'] = this.moduleName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['record_id'] = recordId;
+    data['module_name'] = moduleName;
     return data;
   }
 }

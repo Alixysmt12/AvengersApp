@@ -11,15 +11,15 @@ class GetScreenResponse {
     if (json['data'] != null) {
       data = <ScreenData>[];
       json['data'].forEach((v) {
-        data!.add(new ScreenData.fromJson(v));
+        data!.add(ScreenData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -39,9 +39,9 @@ class ScreenData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['record_id'] = this.recordId;
-    data['screen_name'] = this.screenName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['record_id'] = recordId;
+    data['screen_name'] = screenName;
     return data;
   }
 }

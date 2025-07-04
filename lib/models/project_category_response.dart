@@ -11,15 +11,15 @@ class ProjectCategoryResponse {
     if (json['data'] != null) {
       data = <ProjectCategoryData>[];
       json['data'].forEach((v) {
-        data!.add(new ProjectCategoryData.fromJson(v));
+        data!.add(ProjectCategoryData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -37,8 +37,8 @@ class ProjectCategoryData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
     return data;
   }
 }

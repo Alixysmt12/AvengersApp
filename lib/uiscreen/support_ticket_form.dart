@@ -417,54 +417,54 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
 
       int projectNameLength = lovs.getList[0].data!.projects!.length;
 
-      List<ProjectName> _getName = [];
+      List<ProjectName> getName = [];
       for (int i = 0; i < projectNameLength; i++) {
-        _getName.add(ProjectName(
+        getName.add(ProjectName(
           lovs.getList[0].data!.projects![i].recordId ?? "",
           lovs.getList[0].data!.projects![i].projectName!,
         ));
       }
-      dropDownYear = _getName;
+      dropDownYear = getName;
 
       int ticketCatLength = lovs.getList[0].data!.category!.length;
 
-      List<TicketCategory> _getTicket = [];
+      List<TicketCategory> getTicket = [];
       for (int i = 0; i < ticketCatLength; i++) {
-        _getTicket.add(TicketCategory(
+        getTicket.add(TicketCategory(
           lovs.getList[0].data!.category![i].recordId!,
           lovs.getList[0].data!.category![i].issueCategory!,
         ));
       }
-      dropDownTicketCat = _getTicket;
+      dropDownTicketCat = getTicket;
 
       int userLength = lovs.getList[0].data!.users!.length;
 
-      List<UserData> _getUser = [];
+      List<UserData> getUser = [];
       for (int i = 0; i < userLength; i++) {
-        _getUser.add(UserData(
+        getUser.add(UserData(
           lovs.getList[0].data!.users![i].userId !,
           lovs.getList[0].data!.users![i].fullName!,
         ));
       }
-      dropDownUser = _getUser;
+      dropDownUser = getUser;
 
       int interfaceLength = lovs.getList[0].data!.interface!.length;
-      List<Interface> _getInterface = [];
+      List<Interface> getInterface = [];
       for (int i = 0; i < interfaceLength; i++) {
-        _getInterface.add(Interface(
+        getInterface.add(Interface(
           lovs.getList[0].data!.interface![i].value !,
         ));
       }
-      dropDownInterface = _getInterface;
+      dropDownInterface = getInterface;
 
       int compChanLength = lovs.getList[0].data!.complaintChannel!.length;
-      List<ComplaintChannel> _getComplaintChannel = [];
+      List<ComplaintChannel> getComplaintChannel = [];
       for (int i = 0; i < compChanLength; i++) {
-        _getComplaintChannel.add(ComplaintChannel(
+        getComplaintChannel.add(ComplaintChannel(
           lovs.getList[0].data!.complaintChannel![i].value !,
         ));
       }
-      dropDownComplaintChannel = _getComplaintChannel;
+      dropDownComplaintChannel = getComplaintChannel;
     }
   }
   Future<void> getModule(String projectId) async {
@@ -475,15 +475,15 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
         makeController.getList[0].data != null) {
       int length = makeController.getList[0].data!.length;
 
-      List<ModuleName> _module = [];
+      List<ModuleName> module = [];
       for (int i = 0; i < length; i++) {
-        _module.add(ModuleName(
+        module.add(ModuleName(
           makeController.getList[0].data![i].recordId!,
           makeController.getList[0].data![i].moduleName!,
         ));
       }
 
-      dropDownModule = _module;
+      dropDownModule = module;
     }
 
     setState(() {});
@@ -497,15 +497,15 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
         controller.getList[0].data != null) {
       int length = controller.getList[0].data!.length;
 
-      List<ScreenName> _module = [];
+      List<ScreenName> module = [];
       for (int i = 0; i < length; i++) {
-        _module.add(ScreenName(
+        module.add(ScreenName(
           controller.getList[0].data![i].recordId!,
           controller.getList[0].data![i].screenName!,
         ));
       }
 
-      dropDownScreen = _module;
+      dropDownScreen = module;
     }
 
     setState(() {});
@@ -539,7 +539,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
     final pickedFile = await picker.pickMultiImage(
       imageQuality: 100, maxHeight: 1000, maxWidth: 1000,
     );
-    if (pickedFile != null && pickedFile.isNotEmpty) {
+    if (pickedFile.isNotEmpty) {
       setState(() {
         selectedImages.addAll(pickedFile.map((xfile) => File(xfile.path)));
       });
@@ -555,7 +555,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
   void convertImagesToBase64Profile(List<File> imageFiles) {
     sellImagesProfile.clear(); // Clear previous images if any
 
-    imageFiles.forEach((imageFile) {
+    for (var imageFile in imageFiles) {
       try {
         List<int> imageBytes = imageFile.readAsBytesSync();
         String base64Image = "data:image/png;base64,${base64Encode(imageBytes)}";
@@ -563,7 +563,7 @@ class _SupportTicketFormScreenState extends State<SupportTicketFormScreen> {
       } catch (e) {
         print('Error: $e');
       }
-    });
+    }
   }
 }
 class ProjectName {

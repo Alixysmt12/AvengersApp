@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
   final String? userId;
   final ThemeController themeController = Get.put(ThemeController());
 
-  MyApp({Key? key, this.userId}) : super(key: key);
+  MyApp({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {

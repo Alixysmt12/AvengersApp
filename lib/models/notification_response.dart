@@ -11,15 +11,15 @@ class NotificationResponse {
     if (json['data'] != null) {
       data = <NotificationData>[];
       json['data'].forEach((v) {
-        data!.add(new NotificationData.fromJson(v));
+        data!.add(NotificationData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -56,14 +56,14 @@ class NotificationData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['record_id'] = this.recordId;
-    data['title'] = this.title;
-    data['project_name'] = this.projectName;
-    data['details'] = this.details;
-    data['object_type'] = this.objectType;
-    data['object_id'] = this.objectId;
-    data['is_read'] = this.isRead;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['record_id'] = recordId;
+    data['title'] = title;
+    data['project_name'] = projectName;
+    data['details'] = details;
+    data['object_type'] = objectType;
+    data['object_id'] = objectId;
+    data['is_read'] = isRead;
     return data;
   }
 }

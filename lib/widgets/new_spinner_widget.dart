@@ -1,6 +1,5 @@
 import 'package:avengers_app/theme/color_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 
 class MyCustomDropdownWidget<T> extends StatelessWidget {
@@ -15,7 +14,7 @@ class MyCustomDropdownWidget<T> extends StatelessWidget {
   final double iconSize;
   final String hint;
 
-  MyCustomDropdownWidget({
+  const MyCustomDropdownWidget({super.key, 
     required this.title,
     required this.items,
     this.selectedItem,
@@ -41,7 +40,7 @@ class MyCustomDropdownWidget<T> extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10),
-        Container(
+        SizedBox(
           height: height,
           child: DropdownButtonFormField<T>(
             value: selectedItem,

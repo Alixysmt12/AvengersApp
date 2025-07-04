@@ -8,11 +8,9 @@ import '../routes/route_helper.dart';
 
 // Top-level function for background message handling
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  if (message != null) {
-    print("Title: ${message.notification?.title}");
-    print("Body: ${message.notification?.body}");
-    print("Payload: ${message.data}");
-  }
+  print("Title: ${message.notification?.title}");
+  print("Body: ${message.notification?.body}");
+  print("Payload: ${message.data}");
 }
 
 class FirebaseApi {

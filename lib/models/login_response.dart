@@ -8,13 +8,13 @@ class LoginResponse {
   LoginResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -60,17 +60,17 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['user_type'] = this.userType;
-    data['login_id'] = this.loginId;
-    data['email_address'] = this.emailAddress;
-    data['full_name'] = this.fullName;
-    data['user_role'] = this.userRole;
-    data['apple_push_id'] = this.applePushId;
-    data['android_push_id'] = this.androidPushId;
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_id'] = userId;
+    data['user_type'] = userType;
+    data['login_id'] = loginId;
+    data['email_address'] = emailAddress;
+    data['full_name'] = fullName;
+    data['user_role'] = userRole;
+    data['apple_push_id'] = applePushId;
+    data['android_push_id'] = androidPushId;
+    data['status'] = status;
+    data['message'] = message;
     return data;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 
-import '../utils/app_constants.dart';
 import 'api_client.dart';
 
 class LoginRep {

@@ -8,13 +8,13 @@ class GetLovsResponse {
   GetLovsResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new LovData.fromJson(json['data']) : null;
+    data = json['data'] != null ? LovData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -40,52 +40,52 @@ class LovData {
     if (json['projects'] != null) {
       projects = <Projects>[];
       json['projects'].forEach((v) {
-        projects!.add(new Projects.fromJson(v));
+        projects!.add(Projects.fromJson(v));
       });
     }
     if (json['complaint_channel'] != null) {
       complaintChannel = <ComplaintChannel>[];
       json['complaint_channel'].forEach((v) {
-        complaintChannel!.add(new ComplaintChannel.fromJson(v));
+        complaintChannel!.add(ComplaintChannel.fromJson(v));
       });
     }
     if (json['category'] != null) {
       category = <Category>[];
       json['category'].forEach((v) {
-        category!.add(new Category.fromJson(v));
+        category!.add(Category.fromJson(v));
       });
     }
     if (json['interface'] != null) {
       interface = <Interface>[];
       json['interface'].forEach((v) {
-        interface!.add(new Interface.fromJson(v));
+        interface!.add(Interface.fromJson(v));
       });
     }
     if (json['users'] != null) {
       users = <Users>[];
       json['users'].forEach((v) {
-        users!.add(new Users.fromJson(v));
+        users!.add(Users.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.projects != null) {
-      data['projects'] = this.projects!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (projects != null) {
+      data['projects'] = projects!.map((v) => v.toJson()).toList();
     }
-    if (this.complaintChannel != null) {
+    if (complaintChannel != null) {
       data['complaint_channel'] =
-          this.complaintChannel!.map((v) => v.toJson()).toList();
+          complaintChannel!.map((v) => v.toJson()).toList();
     }
-    if (this.category != null) {
-      data['category'] = this.category!.map((v) => v.toJson()).toList();
+    if (category != null) {
+      data['category'] = category!.map((v) => v.toJson()).toList();
     }
-    if (this.interface != null) {
-      data['interface'] = this.interface!.map((v) => v.toJson()).toList();
+    if (interface != null) {
+      data['interface'] = interface!.map((v) => v.toJson()).toList();
     }
-    if (this.users != null) {
-      data['users'] = this.users!.map((v) => v.toJson()).toList();
+    if (users != null) {
+      data['users'] = users!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -103,9 +103,9 @@ class Projects {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['record_id'] = this.recordId;
-    data['project_name'] = this.projectName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['record_id'] = recordId;
+    data['project_name'] = projectName;
     return data;
   }
 }
@@ -120,8 +120,8 @@ class ComplaintChannel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['value'] = value;
     return data;
   }
 }
@@ -140,10 +140,10 @@ class Category {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['record_id'] = this.recordId;
-    data['issue_category'] = this.issueCategory;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['record_id'] = recordId;
+    data['issue_category'] = issueCategory;
+    data['status'] = status;
     return data;
   }
 }
@@ -160,9 +160,9 @@ class Users {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['full_name'] = this.fullName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['user_id'] = userId;
+    data['full_name'] = fullName;
     return data;
   }
 }
@@ -178,8 +178,8 @@ class Interface {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['value'] = value;
     return data;
   }
 }

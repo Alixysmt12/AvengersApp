@@ -11,15 +11,15 @@ class ProjectWiseTicketData {
     if (json['data'] != null) {
       data = <ProjectData>[];
       json['data'].forEach((v) {
-        data!.add(new ProjectData.fromJson(v));
+        data!.add(ProjectData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -41,10 +41,10 @@ class ProjectData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['project_id'] = this.projectId;
-    data['name'] = this.name;
-    data['count'] = this.count;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['project_id'] = projectId;
+    data['name'] = name;
+    data['count'] = count;
     return data;
   }
 }

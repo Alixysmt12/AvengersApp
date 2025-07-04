@@ -20,6 +20,7 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   String? userId;
+  @override
   void initState() {
     super.initState();
     getData();

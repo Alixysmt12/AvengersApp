@@ -324,7 +324,7 @@ class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderSta
                                       prefs.remove("user_id");
                                       prefs.setString("user_id", response.data!.userId!);
 
-                                      if(_emailController.text.isNotEmpty && _emailController.text != null){
+                                      if(_emailController.text.isNotEmpty){
                                         prefs.setString("email", _emailController.text.toString());
                                         prefs.setString("password", _passwordController.text.toString());
                                       }else{

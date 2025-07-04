@@ -49,8 +49,5 @@ class AppThemeColors {
     shadow: Color(0xFF000000),
     scrim: Color(0xFF000000),
     surfaceTint: Color(0xFF175CD3),
-    background: Color(0xFFFFFFFF),
-    onBackground: Color(0xFF000000),
-    surfaceVariant: Color(0xFFEFF8FF),
   );
 }

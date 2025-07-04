@@ -735,7 +735,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 class CircularProgressBarWithLabel extends StatelessWidget {
   final double progress;
 
-  CircularProgressBarWithLabel({required this.progress});
+  const CircularProgressBarWithLabel({super.key, required this.progress});
 
   @override
   Widget build(BuildContext context) {
@@ -844,7 +844,7 @@ class CircularProgressBarPainter extends CustomPainter {
 class CircularProgressBarWithLabel2 extends StatelessWidget {
   final double progress;
 
-  CircularProgressBarWithLabel2({required this.progress});
+  const CircularProgressBarWithLabel2({super.key, required this.progress});
 
   @override
   Widget build(BuildContext context) {

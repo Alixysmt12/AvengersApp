@@ -1,4 +1,3 @@
-import 'package:avengers_app/theme/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,7 +13,7 @@ class ReusableDashboardTile extends StatelessWidget {
   final Color textColor; // New parameter for text color
 
   const ReusableDashboardTile({
-    Key? key,
+    super.key,
     required this.gradientColors,
     required this.iconPath,
     required this.title,
@@ -24,7 +23,7 @@ class ReusableDashboardTile extends StatelessWidget {
     this.margin = const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
     this.padding = const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
     this.textColor = Colors.white, // Default text color is white
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

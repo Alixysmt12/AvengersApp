@@ -258,14 +258,14 @@ class _AddQuickSupportTicketsScreenState
         lovs.getList[0].data!.projects != null) {
       int projectNameLength = lovs.getList[0].data!.projects!.length;
 
-      List<ProjectName> _getName = [];
+      List<ProjectName> getName = [];
       for (int i = 0; i < projectNameLength; i++) {
-        _getName.add(ProjectName(
+        getName.add(ProjectName(
           lovs.getList[0].data!.projects![i].recordId!,
           lovs.getList[0].data!.projects![i].projectName!,
         ));
       }
-      dropDownYear = _getName;
+      dropDownYear = getName;
     }
   }
 
@@ -277,14 +277,14 @@ class _AddQuickSupportTicketsScreenState
         makeController.getList[0].data != null) {
       int length = makeController.getList[0].data!.length;
 
-      List<ModuleName> _module = [];
+      List<ModuleName> module = [];
       for (int i = 0; i < length; i++) {
-        _module.add(ModuleName(
+        module.add(ModuleName(
           makeController.getList[0].data![i].title!,
         ));
       }
 
-      dropDownModule = _module;
+      dropDownModule = module;
     }
 
     setState(() {});

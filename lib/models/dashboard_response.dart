@@ -8,13 +8,13 @@ class DashboardModel {
   DashboardModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new DashboardData.fromJson(json['data']) : null;
+    data = json['data'] != null ? DashboardData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -44,42 +44,42 @@ class DashboardData {
     fullname = json['fullname'];
     greetings = json['greetings'];
     counters = json['counters'] != null
-        ? new Counters.fromJson(json['counters'])
+        ? Counters.fromJson(json['counters'])
         : null;
     ticketHighlights = json['ticket_highlights'] != null
-        ? new TicketHighlights.fromJson(json['ticket_highlights'])
+        ? TicketHighlights.fromJson(json['ticket_highlights'])
         : null;
     ticketClosureRatioUHF = json['ticket_closure_ratio_UHF'] != null
-        ? new TicketClosureRatioUHF.fromJson(json['ticket_closure_ratio_UHF'])
+        ? TicketClosureRatioUHF.fromJson(json['ticket_closure_ratio_UHF'])
         : null;
     ticketClosureRatio = json['ticket_closure_ratio'] != null
-        ? new TicketClosureRatioUHF.fromJson(json['ticket_closure_ratio'])
+        ? TicketClosureRatioUHF.fromJson(json['ticket_closure_ratio'])
         : null;
     averageTicketClosureTime = json['average_ticket_closure_time'] != null
-        ? new AverageTicketClosureTime.fromJson(
+        ? AverageTicketClosureTime.fromJson(
         json['average_ticket_closure_time'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['fullname'] = this.fullname;
-    data['greetings'] = this.greetings;
-    if (this.counters != null) {
-      data['counters'] = this.counters!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['fullname'] = fullname;
+    data['greetings'] = greetings;
+    if (counters != null) {
+      data['counters'] = counters!.toJson();
     }
-    if (this.ticketHighlights != null) {
-      data['ticket_highlights'] = this.ticketHighlights!.toJson();
+    if (ticketHighlights != null) {
+      data['ticket_highlights'] = ticketHighlights!.toJson();
     }
-    if (this.ticketClosureRatioUHF != null) {
-      data['ticket_closure_ratio_UHF'] = this.ticketClosureRatioUHF!.toJson();
+    if (ticketClosureRatioUHF != null) {
+      data['ticket_closure_ratio_UHF'] = ticketClosureRatioUHF!.toJson();
     }
-    if (this.ticketClosureRatio != null) {
-      data['ticket_closure_ratio'] = this.ticketClosureRatio!.toJson();
+    if (ticketClosureRatio != null) {
+      data['ticket_closure_ratio'] = ticketClosureRatio!.toJson();
     }
-    if (this.averageTicketClosureTime != null) {
+    if (averageTicketClosureTime != null) {
       data['average_ticket_closure_time'] =
-          this.averageTicketClosureTime!.toJson();
+          averageTicketClosureTime!.toJson();
     }
     return data;
   }
@@ -105,11 +105,11 @@ class Counters {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pending_at_support'] = this.pendingAtSupport;
-    data['pending_at_qa'] = this.pendingAtQa;
-    data['pending_at_dev'] = this.pendingAtDev;
-    data['pending_at_powerapp'] = this.pendingAtPowerapp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['pending_at_support'] = pendingAtSupport;
+    data['pending_at_qa'] = pendingAtQa;
+    data['pending_at_dev'] = pendingAtDev;
+    data['pending_at_powerapp'] = pendingAtPowerapp;
     return data;
   }
 }
@@ -140,13 +140,13 @@ class TicketHighlights {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['all_open'] = this.allOpen;
-    data['quick_support'] = this.quickSupport;
-    data['due-today'] = this.dueToday;
-    data['timeline_required'] = this.timelineRequired;
-    data['over_due'] = this.overDue;
-    data['un_assigned'] = this.unAssigned;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['all_open'] = allOpen;
+    data['quick_support'] = quickSupport;
+    data['due-today'] = dueToday;
+    data['timeline_required'] = timelineRequired;
+    data['over_due'] = overDue;
+    data['un_assigned'] = unAssigned;
     return data;
   }
 }
@@ -163,9 +163,9 @@ class TicketClosureRatioUHF {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['mtd'] = this.mtd;
-    data['ytd'] = this.ytd;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['mtd'] = mtd;
+    data['ytd'] = ytd;
     return data;
   }
 }
@@ -182,9 +182,9 @@ class AverageTicketClosureTime {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['power_app'] = this.powerApp;
-    data['non_power_app'] = this.nonPowerApp;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['power_app'] = powerApp;
+    data['non_power_app'] = nonPowerApp;
     return data;
   }
 }

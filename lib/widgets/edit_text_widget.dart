@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
 
 import '../theme/color_constants.dart';
 
@@ -16,7 +15,7 @@ class EditTextWidget extends StatelessWidget {
   final int? maxLength;
 
   const EditTextWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     this.maxLines = 1,
@@ -26,7 +25,7 @@ class EditTextWidget extends StatelessWidget {
     this.keyboardType,
     this.isError = false,
     this.maxLength,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
