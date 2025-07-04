@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class Bigtext extends StatelessWidget {
-  Color? color;
+  final Color? color;
   final String text;
-  double size;
-  TextOverflow overflow;
+  final double size;
+  final TextOverflow overflow;
 
-  Bigtext(
-      {super.key,
-        this.color = const Color(0xff332b2b),
-        required this.text,
-        this.size = 20,
-        this.overflow = TextOverflow.ellipsis});
+  const Bigtext({
+    super.key,
+    this.color = const Color(0xff332b2b),
+    required this.text,
+    this.size = 20,
+    this.overflow = TextOverflow.ellipsis,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,11 @@ class Bigtext extends StatelessWidget {
       overflow: overflow,
       maxLines: 1,
       style: TextStyle(
-          fontFamily: 'simplefont',
-          color: color,
-          fontWeight: FontWeight.w400,
-          fontSize: size),
+        fontFamily: 'simplefont',
+        color: color,
+        fontWeight: FontWeight.w400,
+        fontSize: size,
+      ),
     );
   }
 }
