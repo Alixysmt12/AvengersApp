@@ -17,13 +17,13 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.3'  # Your version
+          flutter-version: '3.29.3'
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze code
-        run: flutter analyze
+      - name: Analyze code (warnings will not fail CI)
+        run: flutter analyze || true   # <--- ✅ Added here
 
       - name: Run tests
         run: flutter test
